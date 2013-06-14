@@ -9,7 +9,7 @@ setup(
     author='Evan Rosen',
     author_email='erosen@wikimedia.org',
     install_requires=[
-       "gcat == 0.1.0",
+       "wikipandas == 0.0.1",
        "limnpy == 0.1.0",
        "pandas >= 0.9.0",
        "squidpy >= 0.1.0",
@@ -17,10 +17,10 @@ setup(
        "mcc-mnc == 0.0.1"
        ],
     dependency_links=[
-        "http://github.com/embr/gcat/tarball/master#egg=gcat-0.1.0",
         "http://github.com/wikimedia/limnpy/tarball/master#egg=limnpy-0.1.0",
         "http://github.com/embr/squidpy/tarball/master#egg=squidpy-0.1.0",
         "http://github.com/embr/mcc-mnc/tarball/master#egg=mcc-mnc-0.0.1",
+        "http://github.com/embr/wikipandas/tarball/master#egg=wikipandas-0.0.1"
         ]
     )
 

@@ -25,10 +25,12 @@ import pandas as pd
 import time
 import unidecode
 import copy
+import dateutil
 import json
 from apiclient.discovery import HttpError
 
-import gcat
+#import gcat
+import wikipandas
 import limnpy
 import mccmnc
 
@@ -43,9 +45,9 @@ DEFAULT_CARRIER_IDS = ['digi-telecommunications-malaysia',
                      'orange-ivory-coast',
                      'promonte-gsm-montenegro',
                      'stc-al-jawal-saudi-arabia',
-                     'tata-india',
+                     #'tata-india',
                      'total-access-dtac-thailand',
-                     'cct-congo-dem-rep',
+                     #'cct-congo-dem-rep',
                      'mobilink-pakistan']
 
 LIMN_GROUP = 'gp'
@@ -84,8 +86,13 @@ class Carrier(object):
         "name" : "Tata India",
         "slug": "tata-india"
     })
-    carrier_version_info = gcat.get_file('WP Zero Partner - Versions', 
-            fmt='pandas', usecache=True).set_index('Slug')
+    carrier_version_info = wikipandas.dataframe_from_url(
+            site='wikimediafoundation.org',
+            title='Mobile_partnerships',
+            table_idx=0)
+            #gcat.get_file('WP Zero Partner - Versions', 
+            #fmt='pandas', usecache=True).set_index('Slug')
+    logger.info(carrier_version_info)
 
     def __init__(self, slug):
         filtered = filter(lambda r : r['slug'] == slug, self.carrier_info)
@@ -97,13 +104,23 @@ class Carrier(object):
         self.__dict__.update(record)
         
         try:
-            meta_record = self.carrier_version_info.ix[self.slug,:]
+            match_records = self.carrier_version_info[self.carrier_version_info.Country == self.country]
+            #logger.debug('match_records: \n%s', match_records)
+            if len(match_records) > 1:
+                match_records = match_records[match_records.Carrier == self.network]
+                #logger.debug('match_records: \n%s', match_records)
+            # iterrows() returns tuples of (index, Series), so [1] gets the Series object
+            meta_record = match_records.iterrows().next()[1] 
+            #logger.debug('meta_record: %s', meta_record)
         except:
-            logger.exception('failed to find carrier identified by slug: %s in Google Drive version doc', slug)
+            logger.exception('failed to find carrier identified by slug: %s in business logic doc: '\
+                   '(http://wikimediafoundation.org/wiki/Mobile_partnerships#Where_is_Wikipedia_free_to_access.3F)', slug)
             raise
-        meta_record = {slugify(k) : v for k,v in dict(meta_record).items()}
-        self.__dict__.update(meta_record)
-        self.versions = [v.strip() for v in unicode(self.versions).split(',')]
+        # 'Which version is Free?' looks like `m.wikipedia & zero.wikipedia`
+        self.versions = re.findall('(m|zero)\.wikipedia',meta_record['Which version is free?'])
+        self.versions = [s[0].upper() for s in self.versions]
+        self.start_date = dateutil.parser.parse(meta_record['Free as of'])
+        logger.debug('constructed carrier:\n%s', pprint.pformat(vars(self)))
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.-]+')
 def slugify(text, delim=u'_'):
@@ -134,32 +151,46 @@ def make_extended_legend(versions, carrier):
     final = carrier_replace(final)
     return final
 
-def load_counts(cache_dir, sep, date_fmt):
+def load_counts(cache_path, sep, date_fmt):
     counts = pd.DataFrame(columns=COUNT_FIELDS)
     date_col_ind = COUNT_FIELDS.index('date')
 
     i = 0
-    for root, dirs, files in os.walk(cache_dir):
-        for count_file in files:
-            full_path = os.path.join(root, count_file)
-            logger.debug('processing: %s', full_path)
-            try:
-                df = pd.read_table(
-                        full_path,
-                        parse_dates=[date_col_ind],
-                        date_parser=lambda s : datetime.datetime.strptime(s,
-                             date_fmt),
-                        skiprows=1,
-                        sep=sep,
-                        names=COUNT_FIELDS)
+    if os.path.isdir(cache_path):
+        for root, dirs, files in os.walk(cache_path):
+            for count_file in files:
+                full_path = os.path.join(root, count_file)
                 logger.debug('processing: %s', full_path)
-                logger.debug('loaded %d lines from file %d: %s', len(df), i, full_path)
-                counts = counts.append(df)
-                i += 1
-            except StopIteration: # this is what happens when Pandas tries to load an empty file
-                logger.debug('skipping empty file: %s', full_path)
-            except:
-                logger.exception('exception caught while loading cache file: %s', count_file)
+                try:
+                    df = pd.read_table(
+                            full_path,
+                            parse_dates=[date_col_ind],
+                            date_parser=lambda s : datetime.datetime.strptime(s,
+                                 date_fmt),
+                            skiprows=1,
+                            sep=sep,
+                            names=COUNT_FIELDS)
+                    logger.debug('processing: %s', full_path)
+                    logger.debug('loaded %d lines from file %d: %s', len(df), i, full_path)
+                    counts = counts.append(df)
+                    i += 1
+                except StopIteration: # this is what happens when Pandas tries to load an empty file
+                    logger.debug('skipping empty file: %s', full_path)
+                except:
+                    logger.exception('exception caught while loading cache file: %s', count_file)
+    else:
+        # if cache_path is just a file
+        try:
+            counts = pd.read_table(
+                    cache_path,
+                    parse_dates=[date_col_ind],
+                    date_parser=lambda s : datetime.datetime.strptime(s,
+                         date_fmt),
+                    skiprows=1,
+                    sep=sep,
+                    names=COUNT_FIELDS)
+        except:
+            logger.exception('could not load counts file at: %s', cache_path)
 
     counts = counts[counts['project'].isin(['wikipedia.org', 'wikipedia'])]
     logger.debug('loaded_counts:%s\n%s', counts, counts[:10])
@@ -321,26 +352,28 @@ def make_summary_version_graph(datasources, basedir, prefix):
     dfs = []
     for carrier, datasource in datasources.items():
         start_date = carrier.start_date
+        #logger.debug('filtering carrier: %s by start date: %s', carrier.name, carrier.start_date)
         if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
             # this means that the carrier isn't yet live
             continue
         valid_df = datasource.data[datasource.data.index > start_date]
-        # logger.debug('valid_df: %s', valid_df)
+        #logger.debug('carrier.versions: %s', carrier.versions)
 
         free_versions = set(map(VERSIONS.get, carrier.versions))
+        #logger.debug('free_versions: %s', free_versions)
         valid_df = valid_df[list(free_versions & set(valid_df.columns))]
-        # logger.debug('valid_df: %s', valid_df)
+        #logger.debug('valid_df: %s', valid_df)
         if len(valid_df) > 0:
             dfs.append(valid_df)
-        
+    
     long_fmt = pd.concat(dfs)
-    # logger.debug('long_fmt: %s', long_fmt)
+    #logger.debug('long_fmt: %s', long_fmt)
     long_fmt = long_fmt.reset_index()
     long_fmt = long_fmt.rename(columns={'index' : 'date'})
     final = long_fmt.groupby('date').sum()
     final['All Versions'] = final.sum(axis=1)
     final_full = copy.deepcopy(final)
-    final = final#[:-1]
+    #final = final[:-1]
     # logger.debug('final: %s', final)
     total_ds = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version',
                                  limn_name='Free Mobile Traffic by Version',
