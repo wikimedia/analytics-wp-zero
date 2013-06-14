@@ -554,7 +554,7 @@ def parse_args():
                         '--loglevel',
                         dest='log_level',
                         choices=LEVELS.keys(),
-                        default='DEBUG',
+                        default='INFO',
                         help='log level')
     parser.add_argument('--carrier_counts',
                         default='carrier',
