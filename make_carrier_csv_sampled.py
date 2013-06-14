@@ -18,7 +18,7 @@ def main():
     keepers = ['date', 'language', 'project', 'site', 'country', 'na']
 
     criteria = [
-            lambda r : r.site() == 'M',
+            lambda r : r.site() in ['M', 'Z'],
             lambda r : r.old_init_request(),
             lambda r : r.provider() == args.provider,
             lambda r : r.datetime() > args.start,
