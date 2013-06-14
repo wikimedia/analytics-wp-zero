@@ -569,9 +569,6 @@ def parse_args():
     parser.add_argument('--country_sep', default='\t')
     parser.add_argument('--carrier_date_fmt', default=DATE_FMT)
     parser.add_argument('--country_date_fmt', default=DATE_FMT)
-    parser.add_argument('--metadata',
-                        default='WP Zero Partner - Versions',
-                        help='Google Drive spreadsheet title which shows the launch date for each carrier')
     parser.add_argument('--carriers',
                         nargs='+',
                         default=DEFAULT_CARRIER_IDS,
