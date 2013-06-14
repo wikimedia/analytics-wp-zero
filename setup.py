@@ -17,10 +17,10 @@ setup(
        "mcc-mnc == 0.0.1"
        ],
     dependency_links=[
-        "http://github.com:embr/gcat.git#egg=gcat-0.1.0",
-        "http://github.com:wikimedia/limnpy.git#egg=limnpy-0.1.0",
-        "http://github.com:embr/squidpy.git#egg=squidpy-0.1.0",
-        "http://github.com:embr/mcc-mnc.git#egg=mcc-mnc-0.0.1",
+        "http://github.com/embr/gcat/tarball/master#egg=gcat-0.1.0",
+        "http://github.com/wikimedia/limnpy/tarball/master#egg=limnpy-0.1.0",
+        "http://github.com/embr/squidpy/tarball/master#egg=squidpy-0.1.0",
+        "http://github.com/embr/mcc-mnc/tarball/master#egg=mcc-mnc-0.0.1",
         ]
     )
 
