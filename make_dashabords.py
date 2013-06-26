@@ -24,8 +24,10 @@ import re
 import pandas as pd
 import time
 import unidecode
+import calendar
 import copy
 import dateutil
+import urllib
 import json
 from apiclient.discovery import HttpError
 
@@ -35,19 +37,21 @@ import limnpy
 import mccmnc
 
 
-DEFAULT_CARRIER_IDS = ['digi-telecommunications-malaysia',
-                     'orange-kenya',
-                     'orange-sahelc-niger',
-                     'orange-tunisia',
+DEFAULT_CARRIER_IDS = [
                      'orange-uganda',
-                     'orange-botswana',
+                     'orange-tunisia',
+                     'digi-telecommunications-malaysia',
+                     'orange-sahelc-niger',
+                     'orange-kenya',
+                     'promonte-gsm-montenegro',
                      'orange-cameroon',
                      'orange-ivory-coast',
-                     'promonte-gsm-montenegro',
-                     'stc-al-jawal-saudi-arabia',
-                     #'tata-india',
                      'total-access-dtac-thailand',
+                     'stc-al-jawal-saudi-arabia',
                      #'cct-congo-dem-rep',
+                     'orange-botswana',
+                     #'bee-line-gsm-russian-federation',
+                     #'pt-excelcom-indonesia',
                      'mobilink-pakistan']
 
 LIMN_GROUP = 'gp'
@@ -75,7 +79,7 @@ COUNT_FIELDS = FIELDS + ['count']
 class Carrier(object):
 
     carrier_info = mccmnc.mccmnc(usecache=False)
-    carrier_info.append({
+    carrier_info.insert(0,{
         "network": "Tata", 
         "country": "India", 
         "mcc": "405", 
@@ -86,40 +90,47 @@ class Carrier(object):
         "name" : "Tata India",
         "slug": "tata-india"
     })
+    carrier_info.insert(0,{
+        "country": "Indonesia",
+        "country_code": "62",
+        "iso": "ID",
+        "mcc": "510",
+        "mcc_mnc": "510-11",
+        "mnc": "11",
+        "name": "XL Axiata  Indonesia",
+        "network": "XL Axiata",
+        "slug": "pt-excelcom-indonesia"
+    })
+
     carrier_version_info = wikipandas.dataframe_from_url(
             site='wikimediafoundation.org',
             title='Mobile_partnerships',
-            table_idx=0)
-            #gcat.get_file('WP Zero Partner - Versions', 
-            #fmt='pandas', usecache=True).set_index('Slug')
+            table_idx=0).set_index('MCC-MNC')
     logger.info(carrier_version_info)
+    
+    @staticmethod
+    def active_carrier_mcc_mncs():
+        return list(Carrier.carrier_version_info.index)
 
-    def __init__(self, slug):
-        filtered = filter(lambda r : r['slug'] == slug, self.carrier_info)
+    def __init__(self, mcc_mnc):
+        filtered = filter(lambda r : r['mcc_mnc'] == mcc_mnc, self.carrier_info)
         try:
             record = filtered[0]
         except IndexError:
-            logger.exception('could not find carrier identified by slug: %s in carrier_info', slug)
+            logger.exception('could not find carrier identified by mcc_mnc: %s in carrier_info', mcc_mnc)
             raise
         self.__dict__.update(record)
         
         try:
-            match_records = self.carrier_version_info[self.carrier_version_info.Country == self.country]
-            #logger.debug('match_records: \n%s', match_records)
-            if len(match_records) > 1:
-                match_records = match_records[match_records.Carrier == self.network]
-                #logger.debug('match_records: \n%s', match_records)
-            # iterrows() returns tuples of (index, Series), so [1] gets the Series object
-            meta_record = match_records.iterrows().next()[1] 
-            #logger.debug('meta_record: %s', meta_record)
+            version_record = self.carrier_version_info.loc[mcc_mnc].to_dict()
         except:
-            logger.exception('failed to find carrier identified by slug: %s in business logic doc: '\
-                   '(http://wikimediafoundation.org/wiki/Mobile_partnerships#Where_is_Wikipedia_free_to_access.3F)', slug)
+            logger.exception('failed to find carrier identified by mcc-mnc: %s in business logic doc: '\
+                   '(http://wikimediafoundation.org/wiki/Mobile_partnerships#Where_is_Wikipedia_free_to_access.3F)', mcc_mnc)
             raise
         # 'Which version is Free?' looks like `m.wikipedia & zero.wikipedia`
-        self.versions = re.findall('(m|zero)\.wikipedia',meta_record['Which version is free?'])
+        self.versions = re.findall('(m|zero)\.wikipedia',version_record['Which version is free?'])
         self.versions = [s[0].upper() for s in self.versions]
-        self.start_date = dateutil.parser.parse(meta_record['Free as of'])
+        self.start_date = dateutil.parser.parse(version_record['Free as of'])
         logger.debug('constructed carrier:\n%s', pprint.pformat(vars(self)))
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.-]+')
@@ -152,11 +163,14 @@ def make_extended_legend(versions, carrier):
     return final
 
 def load_counts(cache_path, sep, date_fmt):
+    if cache_path.startswith('http://'):
+        request = urllib.urlopen(cache_path)
+        cache_path = request.fp
     counts = pd.DataFrame(columns=COUNT_FIELDS)
     date_col_ind = COUNT_FIELDS.index('date')
 
     i = 0
-    if os.path.isdir(cache_path):
+    if isinstance(cache_path, file) and os.path.isdir(cache_path):
         for root, dirs, files in os.walk(cache_path):
             for count_file in files:
                 full_path = os.path.join(root, count_file)
@@ -214,6 +228,27 @@ def clean_carrier_counts(carrier_counts):
     return carrier_counts
 
 
+def downsample_monthly(daily_df):
+    monthly_df = daily_df.resample('M', how='sum', label='right')
+    for idx, row in monthly_df.iterrows():
+        norm_coeff = 30.0 / calendar.monthrange(idx.year, idx.month)[1]
+        for j, val in enumerate(row):
+            monthly_df.ix[idx,] = norm_coeff * val
+    return monthly_df
+    #normalized_df = pd.DataFrame.from_items(
+            #[(idx, [float(val) / calendar.monthrange(idx.year, idx.month)[1] for val in row])
+                #for (idx, row) in monthly_df.iterrows()],
+            #columns=monthly_df.columns,
+            #orient='index')
+    #monthly_df = monthly_df.reset_index()
+    #columns = list(monthly_df.columns)
+    #if 'index' in columns:
+        #columns[columns.index('index')] = 'date'
+        #monthly_df.columns = columns
+    #normalized_df = normalized_df.set_index('date')
+    #return normalized_df
+
+
 def make_country_sources(counts, basedir, prefix):
     if not len(counts):
         logger.warning('country counts is empty, returning None')
@@ -232,7 +267,8 @@ def make_country_sources(counts, basedir, prefix):
     daily_country_source.write(basedir)
     #logger.debug('daily_country_source: %s', daily_country_source)
 
-    monthly_country_counts = daily_country_counts_limn_full.resample(rule='M', how='sum', label='right')
+    #monthly_country_counts = daily_country_counts_limn_full.resample(rule='M', how='sum', label='right')
+    monthly_country_counts = downsample_monthly(daily_country_counts_limn_full)
     monthly_country_counts = monthly_country_counts#[:-1]
     monthly_country_source = limnpy.DataSource(limn_id=prefix + 'monthly_mobile_wp_views_by_country',
                                                limn_name='Monthly Mobile WP Views By Country',
@@ -274,7 +310,8 @@ def make_version_sources(counts, carrier, basedir, prefix):
                                              limn_group=LIMN_GROUP)
     daily_version_source.write(basedir)
 
-    monthly_version = daily_version_limn_full.resample(rule='M', how='sum', label='right')
+    #monthly_version = daily_version_limn_full.resample(rule='M', how='sum', label='right')
+    monthly_version = downsample_monthly(daily_version_limn_full)
     monthly_version = monthly_version#[:-1]
     monthly_limn_name = '%s Monthly WP View By Version' % carrier.name
     monthly_version_source = limnpy.DataSource(limn_id=slugify(prefix + monthly_limn_name),
@@ -397,7 +434,8 @@ def make_summary_version_graph(datasources, basedir, prefix):
     #total_graph.graph['desc'] += make_extended_legend(['M+Z', 'M', 'Z'])
     total_graph.write(basedir)
 
-    final_monthly = final_full.resample(rule='M', how='sum', label='right')
+    final_monthly = downsample_monthly(final_full)
+    #final_monthly = final_full.resample(rule='M', how='sum', label='right')
     final_monthly = final_monthly#[:-1]
     total_ds_monthly = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version_monthly',
                                          limn_name='Monthly Free Mobile Traffic by Version',
@@ -522,8 +560,8 @@ def main(opts):
     carrier_percent_sources = {}
     daily_country_source, monthly_country_source = make_country_sources(country_counts, opts['limn_basedir'], opts['prefix'])
     # make carrier-specific dashboards
-    for carrier_slug in opts['carriers']:
-        carrier = Carrier(carrier_slug)
+    for carrier_mcc_mnc in Carrier.active_carrier_mcc_mncs():
+        carrier = Carrier(carrier_mcc_mnc)
         logger.info('building dashboard for carrier %s', carrier.slug)
         try:
             version_source, version_percent_source = make_dashboard(
@@ -544,7 +582,11 @@ def main(opts):
     make_summary_version_graph(carrier_version_sources, opts['limn_basedir'], prefix=opts['prefix'])
     if daily_country_source is not None and monthly_country_source is not None:
         make_summary_percent_graph(carrier_percent_sources, opts['limn_basedir'], prefix=opts['prefix'])
-    logger.info('created dashboards:\n%s', '\n'.join(['gp.wmflabs.org/dashboards/%s-%s' % (slugify(opts['prefix'], '-'), c.slug) for c in carrier_version_sources.keys()]))
+    logger.info(
+        'created dashboards:\n%s', '\n'.join(
+            ['gp.wmflabs.org/dashboards/%s' % c.slug for c in carrier_version_sources.keys()]
+        )
+    )
 
 
 def parse_args():
