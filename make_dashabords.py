@@ -21,6 +21,7 @@ import datetime
 import math
 import pprint
 import re
+import numpy as np
 import pandas as pd
 import time
 import unidecode
@@ -37,23 +38,6 @@ import limnpy
 import mccmnc
 
 
-DEFAULT_CARRIER_IDS = [
-                     'orange-uganda',
-                     'orange-tunisia',
-                     'digi-telecommunications-malaysia',
-                     'orange-sahelc-niger',
-                     'orange-kenya',
-                     'promonte-gsm-montenegro',
-                     'orange-cameroon',
-                     'orange-ivory-coast',
-                     'total-access-dtac-thailand',
-                     'stc-al-jawal-saudi-arabia',
-                     #'cct-congo-dem-rep',
-                     'orange-botswana',
-                     #'bee-line-gsm-russian-federation',
-                     #'pt-excelcom-indonesia',
-                     'mobilink-pakistan']
-
 LIMN_GROUP = 'gp'
 
 LEVELS = {'DEBUG': logging.DEBUG,
@@ -62,18 +46,16 @@ LEVELS = {'DEBUG': logging.DEBUG,
           'ERROR': logging.ERROR,
           'CRITICAL': logging.CRITICAL}
 
-#DATE_FMT = '%Y-%m-%d_%H'
 DATE_FMT = '%Y-%m-%d'
 
 VERSIONS = {'X' : 'X', 'M' : 'M', 'M+Z' : 'M+Z', 'Z' : 'Z', 'Country' : 'Country'}
 VERSIONS_LONG = {'X' : 'Free page views from carrier to desktop (non-mobile) Wikipedia urls',
                 'M' : 'Free page views from carrier to m.wikipedia.org urls',
-                'Z' : 'Free page views from carrier to zero.wikipedia.org',
+                'Z' : 'Free page views from carrier to zero.wikipedia.org urls',
                 'M+Z' : 'Combined free page views from carrier to m.wikipedia.org and zero.wikipedia.org urls',
                 'Country' : 'Total page views within country (all networks, not just carrier) to m.wikipedia.org and zero.wikipedia.org urls'}
 
 FIELDS = ['date', 'lang', 'project', 'site', 'country', 'carrier']
-#COUNT_FIELDS = ['count'] + FIELDS
 COUNT_FIELDS = FIELDS + ['count']
 
 class Carrier(object):
@@ -163,14 +145,17 @@ def make_extended_legend(versions, carrier):
     return final
 
 def load_counts(cache_path, sep, date_fmt):
-    if cache_path.startswith('http://'):
-        request = urllib.urlopen(cache_path)
-        cache_path = request.fp
+    #if cache_path.startswith('http://'):
+        #request = urllib.urlopen(cache_path)
+        #cache_path = request.fp
+
+    #initialization
     counts = pd.DataFrame(columns=COUNT_FIELDS)
     date_col_ind = COUNT_FIELDS.index('date')
 
     i = 0
     if isinstance(cache_path, file) and os.path.isdir(cache_path):
+        logging.debug('traversing directory of counts files')
         for root, dirs, files in os.walk(cache_path):
             for count_file in files:
                 full_path = os.path.join(root, count_file)
@@ -194,6 +179,7 @@ def load_counts(cache_path, sep, date_fmt):
                     logger.exception('exception caught while loading cache file: %s', count_file)
     else:
         # if cache_path is just a file
+        logging.debug('loading counts from single file')
         try:
             counts = pd.read_table(
                     cache_path,
@@ -206,7 +192,26 @@ def load_counts(cache_path, sep, date_fmt):
         except:
             logger.exception('could not load counts file at: %s', cache_path)
 
-    counts = counts[counts['project'].isin(['wikipedia.org', 'wikipedia'])]
+    counts = counts[counts.project.isin(['wikipedia.org', 'wikipedia'])]
+    # HACK  ######################################
+    # hard-coded dates to ignore
+    bad_dates = [
+            datetime.date(2013,2,25),
+            datetime.date(2013,2,28),
+            datetime.date(2013,3,4),
+            datetime.date(2013,3,13),
+            datetime.date(2013,3,31),
+        ]
+    # this fails for some reason
+    #counts[counts.date.isin(bad_dates)].count = 0
+    for bad_date in bad_dates:
+        # this also fails because the logical indexing returns a copy of the matching rows
+        #counts[counts.date == bad_date].count = 0
+        tmp_row = counts[counts.date == bad_date]
+        tmp_row.count = np.nan
+        counts[counts.date == bad_date] = tmp_row
+
+        logger.debug('reset row: %s', counts[counts.date == bad_date][:10])
     logger.debug('loaded_counts:%s\n%s', counts, counts[:10])
     return counts
 
@@ -233,20 +238,8 @@ def downsample_monthly(daily_df):
     for idx, row in monthly_df.iterrows():
         norm_coeff = 30.0 / calendar.monthrange(idx.year, idx.month)[1]
         for j, val in enumerate(row):
-            monthly_df.ix[idx,] = norm_coeff * val
+            monthly_df.ix[idx,j] = norm_coeff * val
     return monthly_df
-    #normalized_df = pd.DataFrame.from_items(
-            #[(idx, [float(val) / calendar.monthrange(idx.year, idx.month)[1] for val in row])
-                #for (idx, row) in monthly_df.iterrows()],
-            #columns=monthly_df.columns,
-            #orient='index')
-    #monthly_df = monthly_df.reset_index()
-    #columns = list(monthly_df.columns)
-    #if 'index' in columns:
-        #columns[columns.index('index')] = 'date'
-        #monthly_df.columns = columns
-    #normalized_df = normalized_df.set_index('date')
-    #return normalized_df
 
 
 def make_country_sources(counts, basedir, prefix):
@@ -313,7 +306,7 @@ def make_version_sources(counts, carrier, basedir, prefix):
     #monthly_version = daily_version_limn_full.resample(rule='M', how='sum', label='right')
     monthly_version = downsample_monthly(daily_version_limn_full)
     monthly_version = monthly_version#[:-1]
-    monthly_limn_name = '%s Monthly WP View By Version' % carrier.name
+    monthly_limn_name = '%s Monthly WP Views By Version' % carrier.name
     monthly_version_source = limnpy.DataSource(limn_id=slugify(prefix + monthly_limn_name),
                                                limn_name=monthly_limn_name,
                                                data=monthly_version.reset_index(),
@@ -455,7 +448,9 @@ def make_version_graph(carrier, version_source, basedir, daily=False):
     if not daily:
         version_graph.graph['desc'] += "  This graph is aggregated by month such "\
                 "that the total page requests during a particular month are "\
-                "plotted as the last day of that month"
+                "plotted as the last day of that month. Moreover, to make months "\
+                "comparable, each value has been normalized to give the expected "\
+                "number of page requests if that month were 30 days long."
     version_graph.graph['desc'] += make_extended_legend(['M', 'Z'], carrier)
     version_graph.write(basedir) 
     return version_graph
@@ -611,10 +606,6 @@ def parse_args():
     parser.add_argument('--country_sep', default='\t')
     parser.add_argument('--carrier_date_fmt', default=DATE_FMT)
     parser.add_argument('--country_date_fmt', default=DATE_FMT)
-    parser.add_argument('--carriers',
-                        nargs='+',
-                        default=DEFAULT_CARRIER_IDS,
-                        help='list of carriers for which to create dashboards')
     parser.add_argument('--limn_basedir',
                         default='data',
                         help='basedir in which to place limn datasource/datafile/graphs/dashboards directories')
