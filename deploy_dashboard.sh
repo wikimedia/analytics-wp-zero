@@ -3,8 +3,11 @@
 LIMN_DEPLOY_PATH="/home/erosen/src/limn-deploy"
 DATA_REPO_PATH="/home/erosen/src/dashboard-data"
 
-CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
-COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
+#CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
+#COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
+
+CARRIER_DATA_PATH="drdee_carrier.tsv"
+COUNTRY_DATA_PATH="drdee_country.tsv"
 
 rm -rf data
 

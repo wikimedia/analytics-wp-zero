@@ -57,10 +57,31 @@ VERSIONS_LONG = {'X' : 'Free page views from carrier to desktop (non-mobile) Wik
 
 FIELDS = ['date', 'lang', 'project', 'site', 'country', 'carrier']
 COUNT_FIELDS = FIELDS + ['count']
+DATE_COL_IND = COUNT_FIELDS.index('date')
+
+BAD_DATES = [
+                datetime.date(2013,1,31),
+                datetime.date(2013,2,25),
+                datetime.date(2013,2,28),
+                datetime.date(2013,3,4),
+                datetime.date(2013,3,13),
+                datetime.date(2013,3,31),
+                datetime.date(2013,5,16),
+                datetime.date(2013,5,22),
+                datetime.date(2013,6,1),
+            ]
+
+
+
+
+
+##################################################################
+# CARRIER CLASS
+##################################################################
 
 class Carrier(object):
 
-    carrier_info = mccmnc.mccmnc(usecache=False)
+    carrier_info = mccmnc.mccmnc(usecache=True)
     carrier_info.insert(0,{
         "network": "Tata", 
         "country": "India", 
@@ -81,13 +102,14 @@ class Carrier(object):
         "mnc": "11",
         "name": "XL Axiata  Indonesia",
         "network": "XL Axiata",
-        "slug": "pt-excelcom-indonesia"
+        "slug": "xl-axiata-indonesia"
     })
 
     carrier_version_info = wikipandas.dataframe_from_url(
             site='wikimediafoundation.org',
             title='Mobile_partnerships',
             table_idx=0).set_index('MCC-MNC')
+    carrier_version_info.ix['410-01', 'Free as of'] = 'May 1, 2013'
     logger.info(carrier_version_info)
     
     @staticmethod
@@ -114,6 +136,15 @@ class Carrier(object):
         self.versions = [s[0].upper() for s in self.versions]
         self.start_date = dateutil.parser.parse(version_record['Free as of'])
         logger.debug('constructed carrier:\n%s', pprint.pformat(vars(self)))
+
+
+
+
+
+
+##################################################################
+# TEXT & PRETTINESS UTILITIES
+##################################################################
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.-]+')
 def slugify(text, delim=u'_'):
@@ -144,77 +175,84 @@ def make_extended_legend(versions, carrier):
     final = carrier_replace(final)
     return final
 
-def load_counts(cache_path, sep, date_fmt):
-    #if cache_path.startswith('http://'):
-        #request = urllib.urlopen(cache_path)
-        #cache_path = request.fp
 
+
+
+
+##################################################################
+# LOADING AND SANITIZATION
+##################################################################
+
+def load_dir(count_dir, sep, date_fmt):
     #initialization
     counts = pd.DataFrame(columns=COUNT_FIELDS)
-    date_col_ind = COUNT_FIELDS.index('date')
 
-    i = 0
-    if isinstance(cache_path, file) and os.path.isdir(cache_path):
-        logging.debug('traversing directory of counts files')
-        for root, dirs, files in os.walk(cache_path):
-            for count_file in files:
-                full_path = os.path.join(root, count_file)
-                logger.debug('processing: %s', full_path)
-                try:
-                    df = pd.read_table(
-                            full_path,
-                            parse_dates=[date_col_ind],
-                            date_parser=lambda s : datetime.datetime.strptime(s,
-                                 date_fmt),
-                            skiprows=1,
-                            sep=sep,
-                            names=COUNT_FIELDS)
-                    logger.debug('processing: %s', full_path)
-                    logger.debug('loaded %d lines from file %d: %s', len(df), i, full_path)
-                    counts = counts.append(df)
-                    i += 1
-                except StopIteration: # this is what happens when Pandas tries to load an empty file
-                    logger.debug('skipping empty file: %s', full_path)
-                except:
-                    logger.exception('exception caught while loading cache file: %s', count_file)
-    else:
-        # if cache_path is just a file
-        logging.debug('loading counts from single file')
-        try:
-            counts = pd.read_table(
-                    cache_path,
-                    parse_dates=[date_col_ind],
-                    date_parser=lambda s : datetime.datetime.strptime(s,
-                         date_fmt),
-                    skiprows=1,
-                    sep=sep,
-                    names=COUNT_FIELDS)
-        except:
-            logger.exception('could not load counts file at: %s', cache_path)
-
-    counts = counts[counts.project.isin(['wikipedia.org', 'wikipedia'])]
-    # HACK  ######################################
-    # hard-coded dates to ignore
-    bad_dates = [
-            datetime.date(2013,2,25),
-            datetime.date(2013,2,28),
-            datetime.date(2013,3,4),
-            datetime.date(2013,3,13),
-            datetime.date(2013,3,31),
-        ]
-    # this fails for some reason
-    #counts[counts.date.isin(bad_dates)].count = 0
-    for bad_date in bad_dates:
-        # this also fails because the logical indexing returns a copy of the matching rows
-        #counts[counts.date == bad_date].count = 0
-        tmp_row = counts[counts.date == bad_date]
-        tmp_row.count = np.nan
-        counts[counts.date == bad_date] = tmp_row
-
-        logger.debug('reset row: %s', counts[counts.date == bad_date][:10])
-    logger.debug('loaded_counts:%s\n%s', counts, counts[:10])
+    logger.debug('traversing directory of counts files')
+    for root, dirs, files in os.walk(count_dir):
+        for count_file in files:
+            full_path = os.path.join(root, count_file)
+            logger.debug('processing: %s', full_path)
+            count_file = open(full_path)
+            tmp_counts = load_file(count_file)
+            counts = counts.append(tmp_counts)
     return counts
 
+def load_file(f, sep, date_fmt):
+    try:
+        counts = pd.read_table(
+                f,
+                parse_dates=[DATE_COL_IND],
+                date_parser=lambda s : datetime.datetime.strptime(s,
+                     date_fmt),
+                skiprows=1,
+                sep=sep,
+                names=COUNT_FIELDS)
+    except StopIteration: # this is what happens when Pandas tries to load an empty file
+        logger.debug('skipping empty file')
+    except:
+        logger.exception('exception caught while loading cache file: %s',f)
+    return counts
+
+def load_counts(count_path, sep, date_fmt):
+
+    # check type of count_path
+    if count_path.startswith('http://'):
+        request = urllib.urlopen(count_path)
+        count_file = request.fp
+        counts = load_file(count_file, sep, date_fmt)
+    elif os.path.isdir(count_path):
+        counts = load_dir(count_path, sep, date_fmt)
+    else:
+        count_file = open(count_path)
+        logger.debug('processing: %s', count_path)
+        counts = load_file(count_file, sep, date_fmt)
+
+    cleaned = clean_counts(counts)
+    logger.debug('loaded_counts:%s\n%s', counts, counts[:10])
+    logger.info('loaded_counts.carrier.unique():\n%s', '\n'.join(map(str, sorted(counts.carrier.unique()))))
+    return cleaned
+
+
+def clean_counts(counts):
+    counts = counts[counts.project.isin(['wikipedia.org', 'wikipedia'])]
+
+    # hard-coded dates to ignore
+    # this fails for some reason
+    #counts[counts.date.isin(bad_dates)].count = 0
+    for bad_date in BAD_DATES:
+        tmp_rows = counts[counts.date == bad_date]
+        counts = counts.drop(tmp_rows.index)
+        logger.debug('dropped rows which should be empty:\n%s', counts[counts.date == bad_date])
+        #for idx, tmp_row in tmp_rows.iterrows():
+            #counts.ix[idx,'count'] = np.nan
+            #logger.debug('reset row: %s', counts.iloc[idx])
+
+    # verify that counts are all integers or floats
+    if counts['count'].dtype not in [np.int64, np.float64]:
+        logger.warning('counts loaded from file: %s have incorrect types:\n%s', 
+                counts.get_dtype_counts())
+    logger.debug('loaded_counts:%s\n%s', counts, counts[:10])
+    return counts
 
 def clean_carrier_counts(carrier_counts):
     replace_dict = {
@@ -227,18 +265,56 @@ def clean_carrier_counts(carrier_counts):
             'orange-niger' : 'orange-sahelc-niger',
             'orange-tunesia' : 'orange-tunisia',
             'saudi-telecom' :  'stc-al-jawal-saudi-arabia',
-            'dtac-thailand' : 'total-access-dtac-thailand'
+            'dtac-thailand' : 'total-access-dtac-thailand',
+            'pt-excelcom-indonesia' : 'xl-axiata-indonesia'
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
 
 
+
+
+
+
+
+
+##################################################################
+# MAKE DATASOURCES
+##################################################################
+
 def downsample_monthly(daily_df):
+    """
+    normalizes data by the number of available days of data for that month
+    considering the number of BAD_DATES falling in that month and whether
+    the last month is only partly finished
+
+    Parameters:
+      daily_df (DataFrame) : daily DateTimeIndex DataFrame
+    """
     monthly_df = daily_df.resample('M', how='sum', label='right')
     for idx, row in monthly_df.iterrows():
-        norm_coeff = 30.0 / calendar.monthrange(idx.year, idx.month)[1]
+        days_in_month = calendar.monthrange(idx.year, idx.month)[1]
+        days_of_data = days_in_month
+        # deal with end edge case
+        end_date = datetime.date(idx.year, idx.month, days_in_month)
+        if daily_df.index[-1].month == idx.month:
+            end_date = daily_df.index[-1].to_pydatetime().date()
+            days_of_data = end_date.day
+
+        # deal with start edge case
+        start_date = datetime.date(idx.year, idx.month, 1)
+        if daily_df.index[0].month == idx.month:
+            start_date = daily_df.index[0].to_pydatetime().date()
+            days_of_data = days_of_data - (start_date.day - 1)
+
+        bad_days_in_month = len(filter(lambda d : d.month == idx.month and d <= end_date and d >= start_date , BAD_DATES))
+        days_of_data = days_of_data - bad_days_in_month
+        norm_coeff = 30.0 / days_of_data if days_of_data else 0.0
         for j, val in enumerate(row):
+            logger.debug('val: %s', val)
+            logger.debug('norm_coeff: %s', norm_coeff)
             monthly_df.ix[idx,j] = norm_coeff * val
+    #monthly_df = monthly_df[:-1]
     return monthly_df
 
 
@@ -248,11 +324,11 @@ def make_country_sources(counts, basedir, prefix):
         return None, None
     country_counts = counts.groupby(['country', 'date'], as_index=False).sum()
     country_counts_limn = country_counts.pivot('date', 'country', 'count')
-    daily_country_counts_limn = country_counts_limn.resample('D', how='sum', label='right')
+    # if data is hourly, first downsample to daily
+    daily_country_counts_limn = country_counts_limn.resample('D', how='sum', label='left')
     logger.debug('daily_country_counts_limn: %s', daily_country_counts_limn)
     #daily_country_counts_limn = daily_country_counts_limn.rename(columns=COUNTRY_NAMES)
     daily_country_counts_limn_full = copy.deepcopy(daily_country_counts_limn)
-    daily_country_counts_limn = daily_country_counts_limn#[:-1]
     daily_country_source = limnpy.DataSource(limn_id=prefix + 'daily_mobile_wp_views_by_country',
                                              limn_name='Daily Mobile WP Views By Country',
                                              data=daily_country_counts_limn,
@@ -260,9 +336,7 @@ def make_country_sources(counts, basedir, prefix):
     daily_country_source.write(basedir)
     #logger.debug('daily_country_source: %s', daily_country_source)
 
-    #monthly_country_counts = daily_country_counts_limn_full.resample(rule='M', how='sum', label='right')
     monthly_country_counts = downsample_monthly(daily_country_counts_limn_full)
-    monthly_country_counts = monthly_country_counts#[:-1]
     monthly_country_source = limnpy.DataSource(limn_id=prefix + 'monthly_mobile_wp_views_by_country',
                                                limn_name='Monthly Mobile WP Views By Country',
                                                data=monthly_country_counts,
@@ -274,7 +348,7 @@ def make_country_sources(counts, basedir, prefix):
 def make_version_sources(counts, carrier, basedir, prefix):
     # logger.debug('counts:\n%s', counts)
     # logger.debug('counts.columns: %s', counts.columns)
-
+    logger.debug('filtering counts for carrier name: `%s`', carrier.slug)
     prov_counts = counts[counts.carrier == carrier.slug]
     start_date = carrier.start_date
     if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
@@ -295,7 +369,8 @@ def make_version_sources(counts, carrier, basedir, prefix):
     daily_version_limn = daily_version.pivot('date', 'site', 'count')
     daily_version_limn = daily_version_limn.rename(columns=VERSIONS)
     daily_version_limn_full = copy.deepcopy(daily_version_limn)
-    daily_version_limn = daily_version_limn.resample(rule='D', how='sum', label='right')#[:-1]
+    daily_version_limn = daily_version_limn.resample(rule='D', how='sum', label='left')
+    logger.debug('last daily row:\n%s', daily_version_limn[-2:])
     daily_limn_name = '%s Daily Wikipedia Page Requests By Version' % carrier.name
     daily_version_source = limnpy.DataSource(limn_id=slugify(prefix + daily_limn_name),
                                              limn_name=daily_limn_name, 
@@ -303,9 +378,8 @@ def make_version_sources(counts, carrier, basedir, prefix):
                                              limn_group=LIMN_GROUP)
     daily_version_source.write(basedir)
 
-    #monthly_version = daily_version_limn_full.resample(rule='M', how='sum', label='right')
     monthly_version = downsample_monthly(daily_version_limn_full)
-    monthly_version = monthly_version#[:-1]
+    monthly_version = monthly_version
     monthly_limn_name = '%s Monthly WP Views By Version' % carrier.name
     monthly_version_source = limnpy.DataSource(limn_id=slugify(prefix + monthly_limn_name),
                                                limn_name=monthly_limn_name,
@@ -366,6 +440,16 @@ def make_percent_sources(carrier,
     monthly_percent_source.write(basedir)
     return daily_percent_source, monthly_percent_source
 
+
+
+
+
+
+
+
+##################################################################
+# MAKE GRAPHS
+##################################################################
 
 def make_summary_percent_graph(datasources, basedir, prefix):
     """no launch date checking because this is for internal use only"""
@@ -428,8 +512,6 @@ def make_summary_version_graph(datasources, basedir, prefix):
     total_graph.write(basedir)
 
     final_monthly = downsample_monthly(final_full)
-    #final_monthly = final_full.resample(rule='M', how='sum', label='right')
-    final_monthly = final_monthly#[:-1]
     total_ds_monthly = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version_monthly',
                                          limn_name='Monthly Free Mobile Traffic by Version',
                                          data=final_monthly,
@@ -490,6 +572,16 @@ def make_percent_graph(carrier, percent_source, basedir, daily=False):
                 "plotted as the last day of that month"
     percent_graph.write(basedir)
     return percent_graph
+
+
+
+
+
+
+
+##################################################################
+# MAKE DASHBOARDS
+##################################################################
 
 def make_dashboard(carrier_counts, 
                    daily_country_source, 
@@ -570,6 +662,7 @@ def main(opts):
         except ValueError:
             logging.exception('exception raised while constructing dashboard for %s', carrier.slug)
             continue
+        # store datasource objects for use in summary graphs
         carrier_version_sources[carrier] = version_source
         carrier_percent_sources[carrier] = version_percent_source
 
@@ -585,6 +678,12 @@ def main(opts):
 
 
 def parse_args():
+    """
+    create argparse parse and actually do parsing
+
+    Returns:
+      dictionary of arguments : vars(args)
+    """
     parser = argparse.ArgumentParser(description='Process a collection of \
     squid logs and write certain extracted metrics to file')
     parser.add_argument('-l',
