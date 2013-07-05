@@ -1,29 +1,26 @@
 #!/bin/bash
 
-LIMN_DEPLOY_PATH="/home/erosen/src/limn-deploy"
-DATA_REPO_PATH="/home/erosen/src/dashboard-data"
+LIMN_DEPLOY_KEY="/home/erosen/src/wp-zero/deploy_key"
+DATA_REPO_PATH="/home/erosen/src/wp-zero-data"
 
-#CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
-#COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
-
-CARRIER_DATA_PATH="drdee_carrier.tsv"
-COUNTRY_DATA_PATH="drdee_country.tsv"
+CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
+COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
 
 rm -rf data
 
 # make dashboard files
-python make_dashabords.py -l=DEBUG --carrier_counts=$CARRIER_DATA_PATH --country_counts=$COUNTRY_DATA_PATH --daily
+python make_dashabords.py -l=DEBUG --carrier_counts=$CARRIER_DATA_PATH --country_counts=$COUNTRY_DATA_PATH --daily --limn_basedir=$DATA_REPO_PATH
+
+# setup limn_deploy ssh identity
+eval `ssh-agent`
+ssh-add $LIMN_DEPLOY_KEY
 
 # update data repo
 cd $DATA_REPO_PATH
 git pull
-cd -
-cp -r data/* $DATA_REPO_PATH
-cd $DATA_REPO_PATH
 git add -A
-git commit -a -m 'automatic commit using deploy_dashboard.sh script'
+git commit -m 'automatic commit using deploy_dashboard.sh script'
 git push
 
-# deploy data
-cd $LIMN_DEPLOY_PATH
-fab gp deploy.only_data
+# remove deploy key
+ssh-add -d $LIMN_DEPLOY_KEY

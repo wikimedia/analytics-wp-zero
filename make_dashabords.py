@@ -38,7 +38,7 @@ import limnpy
 import mccmnc
 
 
-LIMN_GROUP = 'gp'
+LIMN_GROUP = 'gp_zero'
 
 LEVELS = {'DEBUG': logging.DEBUG,
           'INFO': logging.INFO,
@@ -68,7 +68,6 @@ BAD_DATES = [
                 datetime.date(2013,3,31),
                 datetime.date(2013,5,16),
                 datetime.date(2013,5,22),
-                datetime.date(2013,6,1),
             ]
 
 
