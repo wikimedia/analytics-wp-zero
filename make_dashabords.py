@@ -104,7 +104,7 @@ class Carrier(object):
         "slug": "xl-axiata-indonesia"
     })
 
-    carrier_version_info = wikipandas.dataframe_from_url(
+    carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
             title='Mobile_partnerships',
             table_idx=0).set_index('MCC-MNC')
@@ -265,7 +265,8 @@ def clean_carrier_counts(carrier_counts):
             'orange-tunesia' : 'orange-tunisia',
             'saudi-telecom' :  'stc-al-jawal-saudi-arabia',
             'dtac-thailand' : 'total-access-dtac-thailand',
-            'pt-excelcom-indonesia' : 'xl-axiata-indonesia'
+            'pt-excelcom-indonesia' : 'xl-axiata-indonesia',
+            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka'
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts

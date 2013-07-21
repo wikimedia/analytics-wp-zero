@@ -3,8 +3,12 @@
 LIMN_DEPLOY_KEY="/home/erosen/src/wp-zero/deploy_key"
 DATA_REPO_PATH="/home/erosen/src/wp-zero-data"
 
-CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
-COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
+#CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily.tsv"
+#COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily.tsv"
+CARRIER_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/carrier/zero_carrier-daily-squid.tsv"
+COUNTRY_DATA_PATH="http://stats.wikimedia.org/kraken-public/webrequest/mobile/zero/country/zero_country-daily-carrier.tsv"
+#CARRIER_DATA_PATH="/home/erosen/src/wp-zero/zero_carrier-daily.tsv"
+#COUNTRY_DATA_PATH="/home/erosen/src/wp-zero/zero_country-daily.tsv"
 
 rm -rf data
 
