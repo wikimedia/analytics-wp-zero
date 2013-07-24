@@ -365,6 +365,7 @@ def make_version_sources(counts, carrier, basedir, prefix):
         raise ValueError('carrier %s is not present in carrier counts' % carrier.name)
 
     # munge counts into right format
+    #daily_version = prov_counts.groupby(['date', 'language'], as_index=False).sum()
     daily_version = prov_counts.groupby(['date', 'site'], as_index=False).sum()
     daily_version_limn = daily_version.pivot('date', 'site', 'count')
     daily_version_limn = daily_version_limn.rename(columns=VERSIONS)
