@@ -31,6 +31,7 @@ import dateutil
 import urllib
 import json
 from apiclient.discovery import HttpError
+from pandas import DataFrame
 
 #import gcat
 import wikipandas
@@ -109,6 +110,17 @@ class Carrier(object):
             title='Mobile_partnerships',
             table_idx=0).set_index('MCC-MNC')
     carrier_version_info.ix['410-01', 'Free as of'] = 'May 1, 2013'
+
+    additional_carrier = {
+        'Country': 'Cambodia',
+        'Carrier': 'Hello/Malaysia Telcom',
+        'Free as of': 'May 6, 2013', # Zero:456-02 page on meta was created that day
+        'Which version is free?': 'zero.wikipedia only',
+        'Which languages are free?': 'All languages',
+        'Any other restrictions?': 'None'}
+    additional_carrier_df = DataFrame([additional_carrier], index=['456-02'])
+    carrier_version_info = carrier_version_info.append(additional_carrier_df)
+
     logger.info(carrier_version_info)
     
     @staticmethod
@@ -266,7 +278,8 @@ def clean_carrier_counts(carrier_counts):
             'saudi-telecom' :  'stc-al-jawal-saudi-arabia',
             'dtac-thailand' : 'total-access-dtac-thailand',
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',
-            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka'
+            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',
+            'hello/malaysia-telcom-cambodia' : 'hello-malaysia-telcom-cambodia',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
