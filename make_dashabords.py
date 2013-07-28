@@ -121,6 +121,16 @@ class Carrier(object):
     additional_carrier_df = DataFrame([additional_carrier], index=['456-02'])
     carrier_version_info = carrier_version_info.append(additional_carrier_df)
 
+    additional_carrier = {
+        'Country': 'Bangladesh',
+        'Carrier': 'GrameenPhone',
+        'Free as of': 'May 6, 2013', # Zero:470-01 page on meta was created that day
+        'Which version is free?': 'zero.wikipedia only',
+        'Which languages are free?': 'bn',
+        'Any other restrictions?': 'None'}
+    additional_carrier_df = DataFrame([additional_carrier], index=['470-01'])
+    carrier_version_info = carrier_version_info.append(additional_carrier_df)
+
     logger.info(carrier_version_info)
     
     @staticmethod
