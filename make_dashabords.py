@@ -330,13 +330,13 @@ def downsample_monthly(daily_df):
         days_of_data = days_in_month
         # deal with end edge case
         end_date = datetime.date(idx.year, idx.month, days_in_month)
-        if daily_df.index[-1].month == idx.month:
+        if daily_df.index[-1].year == idx.year and daily_df.index[-1].month == idx.month:
             end_date = daily_df.index[-1].to_pydatetime().date()
             days_of_data = end_date.day
 
         # deal with start edge case
         start_date = datetime.date(idx.year, idx.month, 1)
-        if daily_df.index[0].month == idx.month:
+        if daily_df.index[0].year == idx.year and daily_df.index[0].month == idx.month:
             start_date = daily_df.index[0].to_pydatetime().date()
             days_of_data = days_of_data - (start_date.day - 1)
 
