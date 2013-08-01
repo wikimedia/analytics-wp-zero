@@ -62,13 +62,31 @@ DATE_COL_IND = COUNT_FIELDS.index('date')
 
 BAD_DATES = [
                 datetime.date(2013,1,31),
+                datetime.date(2013,2,13),
                 datetime.date(2013,2,25),
+                datetime.date(2013,2,26),
                 datetime.date(2013,2,28),
                 datetime.date(2013,3,4),
+                datetime.date(2013,3,7),
+                datetime.date(2013,3,8),
+                datetime.date(2013,3,11),
+                datetime.date(2013,3,12),
                 datetime.date(2013,3,13),
                 datetime.date(2013,3,31),
+                datetime.date(2013,4,18),
+                datetime.date(2013,4,25),
                 datetime.date(2013,5,16),
+                datetime.date(2013,5,17),
+                datetime.date(2013,5,18),
+                datetime.date(2013,5,19),
+                datetime.date(2013,5,20),
+                datetime.date(2013,5,21),
                 datetime.date(2013,5,22),
+                datetime.date(2013,5,31),
+                datetime.date(2013,7,24),
+                datetime.date(2013,7,25),
+                datetime.date(2013,7,26),
+                datetime.date(2013,7,27),
             ]
 
 
