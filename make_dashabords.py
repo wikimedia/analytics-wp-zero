@@ -340,7 +340,7 @@ def downsample_monthly(daily_df):
             start_date = daily_df.index[0].to_pydatetime().date()
             days_of_data = days_of_data - (start_date.day - 1)
 
-        bad_days_in_month = len(filter(lambda d : d.month == idx.month and d <= end_date and d >= start_date , BAD_DATES))
+        bad_days_in_month = len(filter(lambda d : d.year == idx.year and d.month == idx.month and d <= end_date and d >= start_date , BAD_DATES))
         days_of_data = days_of_data - bad_days_in_month
         norm_coeff = 30.0 / days_of_data if days_of_data else 0.0
         for j, val in enumerate(row):
