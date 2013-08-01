@@ -499,6 +499,15 @@ def make_summary_percent_graph(datasources, basedir, prefix):
 def make_summary_version_graph(datasources, basedir, prefix):
     dfs = []
     for carrier, datasource in datasources.items():
+	if carrier.mcc_mnc == '470-01':
+		logger.info( "Dropping 'GrameenPhone Bangladesh' in total sum as requested by Amit Kapoor via email 2013-07-31" )
+		continue
+	if carrier.mcc_mnc == '502-13':
+		logger.info( "Dropping 'Celcom Malaysia' in total sum as requested by Amit Kapoor via email 2013-07-31" )
+		continue
+	if carrier.mcc_mnc == '404-01':
+		logger.info( "Dropping 'Aircel India' in total sum as requested by Amit Kapoor via email 2013-07-31" )
+		continue
         start_date = carrier.start_date
         #logger.debug('filtering carrier: %s by start date: %s', carrier.name, carrier.start_date)
         if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
