@@ -391,7 +391,7 @@ def make_version_sources(counts, carrier, basedir, prefix):
             start_date = prov_counts.date.min()
         else:
             logger.warning('carrier counts for carrier %s is empty', carrier.slug)
-    prov_counts = prov_counts[prov_counts['date'] > start_date]
+    prov_counts = prov_counts[prov_counts['date'] >= start_date]
     
     if len(prov_counts) == 0:
         logger.warning('skipping carrier: %s--graphs will not be available on dashbaord', carrier.name)
