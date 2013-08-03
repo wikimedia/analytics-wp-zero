@@ -32,6 +32,7 @@ import urllib
 import json
 from apiclient.discovery import HttpError
 from pandas import DataFrame
+from pandas.tseries.index import DatetimeIndex
 
 #import gcat
 import wikipandas
@@ -48,6 +49,8 @@ LEVELS = {'DEBUG': logging.DEBUG,
           'CRITICAL': logging.CRITICAL}
 
 DATE_FMT = '%Y-%m-%d'
+
+CONNECT_GAPS = True # If true, dates around bad_dates get connected by a line in the graph
 
 VERSIONS = {'X' : 'X', 'M' : 'M', 'M+Z' : 'M+Z', 'Z' : 'Z', 'Country' : 'Country'}
 VERSIONS_LONG = {'X' : 'Free page views from carrier to desktop (non-mobile) Wikipedia urls',
@@ -322,6 +325,18 @@ def clean_carrier_counts(carrier_counts):
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
 
+def clean_resampled_daily(df):
+    """
+    Clean data that has been resampled to days from bad dates
+
+    This function may or may not modify the given df. Be sure to only use the
+    returned one.
+    """
+    if CONNECT_GAPS:
+        BAD_DATES_index = DatetimeIndex(data = BAD_DATES)
+        to_drop_index = df.index.intersection(BAD_DATES_index)
+        df = df.drop(to_drop_index)
+    return df
 
 
 
@@ -377,6 +392,7 @@ def make_country_sources(counts, basedir, prefix):
     country_counts_limn = country_counts.pivot('date', 'country', 'count')
     # if data is hourly, first downsample to daily
     daily_country_counts_limn = country_counts_limn.resample('D', how='sum', label='left')
+    daily_country_counts_limn = clean_resampled_daily(daily_country_counts_limn)
     logger.debug('daily_country_counts_limn: %s', daily_country_counts_limn)
     #daily_country_counts_limn = daily_country_counts_limn.rename(columns=COUNTRY_NAMES)
     daily_country_counts_limn_full = copy.deepcopy(daily_country_counts_limn)
@@ -422,6 +438,7 @@ def make_version_sources(counts, carrier, basedir, prefix):
     daily_version_limn = daily_version_limn.rename(columns=VERSIONS)
     daily_version_limn_full = copy.deepcopy(daily_version_limn)
     daily_version_limn = daily_version_limn.resample(rule='D', how='sum', label='left')
+    daily_version_limn = clean_resampled_daily(daily_version_limn)
     logger.debug('last daily row:\n%s', daily_version_limn[-2:])
     daily_limn_name = '%s Daily Wikipedia Page Requests By Version' % carrier.name
     daily_version_source = limnpy.DataSource(limn_id=slugify(prefix + daily_limn_name),
