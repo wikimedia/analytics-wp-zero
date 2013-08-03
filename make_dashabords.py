@@ -33,6 +33,7 @@ import json
 from apiclient.discovery import HttpError
 from pandas import DataFrame
 from pandas.tseries.index import DatetimeIndex
+from pandas.lib import Timestamp
 
 #import gcat
 import wikipandas
@@ -327,7 +328,11 @@ def clean_carrier_counts(carrier_counts):
 
 def clean_resampled_daily(df):
     """
-    Clean data that has been resampled to days from bad dates
+    Clean data that has been resampled to days.
+
+    Bad dates get removed if requested, and NaNs in good days get replaced
+    by 0, as absence of a value there does not indicate an error, but that we
+    detected 0 events.
 
     This function may or may not modify the given df. Be sure to only use the
     returned one.
@@ -336,6 +341,12 @@ def clean_resampled_daily(df):
         BAD_DATES_index = DatetimeIndex(data = BAD_DATES)
         to_drop_index = df.index.intersection(BAD_DATES_index)
         df = df.drop(to_drop_index)
+        df.fillna(value = 0, method = None, inplace = True)
+    else:
+        BAD_DATES_timestamps = [ Timestamp(bad_date) for bad_date in BAD_DATES ]
+        for row_idx, row in df.iterrows():
+            if row_idx not in BAD_DATES_timestamps:
+                row.fillna(value = 0, method = None, inplace = True)
     return df
 
 
