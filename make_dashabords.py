@@ -528,7 +528,7 @@ def make_summary_percent_graph(datasources, basedir, prefix):
     g.write(basedir, set_colors=False)
 
 
-def make_summary_version_graph(datasources, basedir, prefix):
+def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=True):
     dfs = []
     for carrier, datasource in datasources.items():
 	if carrier.mcc_mnc == '470-01':
@@ -561,8 +561,15 @@ def make_summary_version_graph(datasources, basedir, prefix):
     final_full = copy.deepcopy(final)
     #final = final[:-1]
     # logger.debug('final: %s', final)
-    total_ds = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version',
-                                 limn_name='Free Mobile Traffic by Version',
+
+    if monthly_downsample:
+        total_ds_limn_id = 'free_mobile_traffic_by_version'
+        total_ds_limn_name = 'Free Mobile Traffic by Version'
+    else:
+        total_ds_limn_id = 'free_mobile_traffic_by_version_monthly_summed'
+        total_ds_limn_name = 'Summed Monthly Free Mobile Traffic by Version'
+    total_ds = limnpy.DataSource(limn_id=prefix + total_ds_limn_id,
+                                 limn_name=total_ds_limn_name,
                                  data=final,
                                  limn_group=LIMN_GROUP)
     total_ds.write(basedir)
@@ -583,15 +590,16 @@ def make_summary_version_graph(datasources, basedir, prefix):
     #total_graph.graph['desc'] += make_extended_legend(['M+Z', 'M', 'Z'])
     total_graph.write(basedir)
 
-    final_monthly = downsample_monthly(final_full)
-    total_ds_monthly = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version_monthly',
-                                         limn_name='Monthly Free Mobile Traffic by Version',
-                                         data=final_monthly,
-                                         limn_group=LIMN_GROUP)
-    total_ds_monthly.write(basedir)
-    total_graph_monthly = total_ds_monthly.get_graph()
-    total_graph_monthly.graph['desc'] = total_graph.graph['desc']
-    total_graph_monthly.write(basedir)
+    if monthly_downsample:
+        final_monthly = downsample_monthly(final_full)
+        total_ds_monthly = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version_monthly',
+                                             limn_name='Monthly Free Mobile Traffic by Version',
+                                             data=final_monthly,
+                                             limn_group=LIMN_GROUP)
+        total_ds_monthly.write(basedir)
+        total_graph_monthly = total_ds_monthly.get_graph()
+        total_graph_monthly.graph['desc'] = total_graph.graph['desc']
+        total_graph_monthly.write(basedir)
 
 
 def make_version_graph(carrier, version_source, basedir, daily=False):
@@ -704,7 +712,7 @@ def make_dashboard(carrier_counts,
     db.write(basedir)
 
     # return carrier-specific sources for use in summary graphs
-    return daily_version_source, daily_percent_source
+    return daily_version_source, daily_percent_source, monthly_version_source
 
 
 def main(opts):
@@ -717,13 +725,14 @@ def main(opts):
 
     carrier_version_sources = {}
     carrier_percent_sources = {}
+    monthly_version_sources = {}
     daily_country_source, monthly_country_source = make_country_sources(country_counts, opts['limn_basedir'], opts['prefix'])
     # make carrier-specific dashboards
     for carrier_mcc_mnc in Carrier.active_carrier_mcc_mncs():
         carrier = Carrier(carrier_mcc_mnc)
         logger.info('building dashboard for carrier %s', carrier.slug)
         try:
-            version_source, version_percent_source = make_dashboard(
+            version_source, version_percent_source, monthly_version_source = make_dashboard(
                                                         carrier_counts, 
                                                         daily_country_source,
                                                         monthly_country_source,
@@ -737,9 +746,11 @@ def main(opts):
         # store datasource objects for use in summary graphs
         carrier_version_sources[carrier] = version_source
         carrier_percent_sources[carrier] = version_percent_source
+        monthly_version_sources[carrier] = monthly_version_source
 
     # make summary graphs
     make_summary_version_graph(carrier_version_sources, opts['limn_basedir'], prefix=opts['prefix'])
+    make_summary_version_graph(monthly_version_sources, opts['limn_basedir'], prefix=opts['prefix'], monthly_downsample=False)
     if daily_country_source is not None and monthly_country_source is not None:
         make_summary_percent_graph(carrier_percent_sources, opts['limn_basedir'], prefix=opts['prefix'])
     logger.info(
