@@ -148,37 +148,6 @@ class Carrier(object):
             site='wikimediafoundation.org',
             title='Mobile_partnerships',
             table_idx=0).set_index('MCC-MNC')
-    carrier_version_info.ix['410-01', 'Free as of'] = 'May 1, 2013'
-
-    additional_carrier = {
-        'Country': 'Cambodia',
-        'Carrier': 'Hello/Malaysia Telcom',
-        'Free as of': 'May 6, 2013', # Zero:456-02 page on meta was created that day
-        'Which version is free?': 'zero.wikipedia only',
-        'Which languages are free?': 'All languages',
-        'Any other restrictions?': 'None'}
-    additional_carrier_df = DataFrame([additional_carrier], index=['456-02'])
-    carrier_version_info = carrier_version_info.append(additional_carrier_df)
-
-    additional_carrier = {
-        'Country': 'Bangladesh',
-        'Carrier': 'GrameenPhone',
-        'Free as of': 'May 6, 2013', # Zero:470-01 page on meta was created that day
-        'Which version is free?': 'zero.wikipedia only',
-        'Which languages are free?': 'bn',
-        'Any other restrictions?': 'None'}
-    additional_carrier_df = DataFrame([additional_carrier], index=['470-01'])
-    carrier_version_info = carrier_version_info.append(additional_carrier_df)
-
-    additional_carrier = {
-        'Country': 'Malaysia',
-        'Carrier': 'Celcom',
-        'Free as of': 'May 6, 2013', # Zero:502-13 page on meta was created that day
-        'Which version is free?': 'zero.wikipedia only',
-        'Which languages are free?': 'All languages',
-        'Any other restrictions?': 'None'}
-    additional_carrier_df = DataFrame([additional_carrier], index=['502-13'])
-    carrier_version_info = carrier_version_info.append(additional_carrier_df)
 
     logger.info(carrier_version_info)
     
