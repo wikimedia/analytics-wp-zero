@@ -542,7 +542,7 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
         if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
             # this means that the carrier isn't yet live
             continue
-        valid_df = datasource.data[datasource.data.index > start_date]
+        valid_df = datasource.data[datasource.data.index >= start_date]
         #logger.debug('carrier.versions: %s', carrier.versions)
 
         free_versions = set(map(VERSIONS.get, carrier.versions))
