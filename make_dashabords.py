@@ -108,6 +108,11 @@ BAD_DATES = [
                 datetime.date(2013,7,25),
                 datetime.date(2013,7,26),
                 datetime.date(2013,7,27),
+                datetime.date(2013,8,14),
+                datetime.date(2013,8,15),
+                datetime.date(2013,8,16),
+                datetime.date(2013,8,17),
+                datetime.date(2013,8,18),
             ]
 
 
