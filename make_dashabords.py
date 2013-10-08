@@ -148,6 +148,16 @@ class Carrier(object):
         "network": "XL Axiata",
         "slug": "xl-axiata-indonesia"
     })
+    carrier_info.insert(0,{
+        "country": "Madagascar",
+        "iso": "MG",
+        "mcc": "646",
+        "mcc_mnc": "646-02",
+        "mnc": "02",
+        "name": "Orange Madagascar",
+        "network": "Orange",
+        "slug": "orange-madagascar"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -313,6 +323,7 @@ def clean_carrier_counts(carrier_counts):
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',
             'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',
             'hello/malaysia-telcom-cambodia' : 'hello-malaysia-telcom-cambodia',
+            'soci-madagascar' : 'orange-madagascar',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
