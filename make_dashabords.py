@@ -158,6 +158,16 @@ class Carrier(object):
         "network": "Orange",
         "slug": "orange-madagascar"
     })
+    carrier_info.insert(0,{
+        "country": "Bangladesh",
+        "iso": "BD",
+        "mcc": "470",
+        "mcc_mnc": "470-03",
+        "mnc": "03",
+        "name": "Banglalink Bangladesh",
+        "network": "Banglalink",
+        "slug": "banglalink-bangladesh"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -324,6 +334,7 @@ def clean_carrier_counts(carrier_counts):
             'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',
             'hello/malaysia-telcom-cambodia' : 'hello-malaysia-telcom-cambodia',
             'soci-madagascar' : 'orange-madagascar',
+            'orascom-bangladesh' : 'banglalink-bangladesh',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
