@@ -159,6 +159,16 @@ class Carrier(object):
         "slug": "orange-madagascar"
     })
     carrier_info.insert(0,{
+        "country": "Jordan",
+        "iso": "JO",
+        "mcc": "416",
+        "mcc_mnc": "416-03",
+        "mnc": "03",
+        "name": "Umniah Jordan",
+        "network": "Umniah",
+        "slug": "umniah-jordan"
+    })
+    carrier_info.insert(0,{
         "country": "Bangladesh",
         "iso": "BD",
         "mcc": "470",
@@ -334,6 +344,7 @@ def clean_carrier_counts(carrier_counts):
             'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',
             'hello/malaysia-telcom-cambodia' : 'hello-malaysia-telcom-cambodia',
             'soci-madagascar' : 'orange-madagascar',
+            'umniah-mobile-co-jordan' : 'umniah-jordan',
             'orascom-bangladesh' : 'banglalink-bangladesh',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
