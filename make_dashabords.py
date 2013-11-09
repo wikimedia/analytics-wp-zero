@@ -178,6 +178,16 @@ class Carrier(object):
         "network": "Banglalink",
         "slug": "banglalink-bangladesh"
     })
+    carrier_info.insert(0,{
+        "country": "Kenya",
+        "iso": "KE",
+        "mcc": "639",
+        "mcc_mnc": "639-03",
+        "mnc": "03",
+        "name": "Airtel Kenya",
+        "network": "Airtel",
+        "slug": "airtel-kenya"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -346,6 +356,7 @@ def clean_carrier_counts(carrier_counts):
             'soci-madagascar' : 'orange-madagascar',
             'umniah-mobile-co-jordan' : 'umniah-jordan',
             'orascom-bangladesh' : 'banglalink-bangladesh',
+            'zain/celtel-ltd-kenya' : 'airtel-kenya',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
