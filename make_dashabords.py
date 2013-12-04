@@ -188,6 +188,16 @@ class Carrier(object):
         "network": "Airtel",
         "slug": "airtel-kenya"
     })
+    carrier_info.insert(0,{
+        "country": "Kazakhstan",
+        "iso": "KZ",
+        "mcc": "401",
+        "mcc_mnc": "401-01",
+        "mnc": "01",
+        "name": "Beeline Kazakhstan",
+        "network": "Beeline",
+        "slug": "beeline-kazakhstan"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -365,6 +375,7 @@ def clean_carrier_counts(carrier_counts):
             'umniah-mobile-co-jordan' : 'umniah-jordan',
             'orascom-bangladesh' : 'banglalink-bangladesh',
             'zain/celtel-ltd-kenya' : 'airtel-kenya',
+            'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
