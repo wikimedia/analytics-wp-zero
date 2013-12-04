@@ -198,6 +198,16 @@ class Carrier(object):
         "network": "Beeline",
         "slug": "beeline-kazakhstan"
     })
+    carrier_info.insert(0,{
+        "country": "Tajikistan",
+        "iso": "TJ",
+        "mcc": "436",
+        "mcc_mnc": "436-01",
+        "mnc": "01",
+        "name": "Tcell Tajikistan",
+        "network": "Tcell",
+        "slug": "tcell-tajikistan"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -376,6 +386,7 @@ def clean_carrier_counts(carrier_counts):
             'orascom-bangladesh' : 'banglalink-bangladesh',
             'zain/celtel-ltd-kenya' : 'airtel-kenya',
             'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',
+            'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
