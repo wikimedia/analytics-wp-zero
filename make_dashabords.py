@@ -217,7 +217,7 @@ class Carrier(object):
     # As MCC-MNC might be links to the corresponding Zero page on meta,
     # we strip that markup, so we have plain strings again.
     carrier_version_info['MCC-MNC'] = carrier_version_info['MCC-MNC'].apply(
-        lambda str: re.compile(r"\[\[m:Zero:(\d{3}-\d{2})\|\1\]\]")
+        lambda str: re.compile(r"\[\[m:Zero:\d{3}-\d{2}\|(\d{3}-\d{2})\]\]")
             .sub(r"\1", str) )
 
     carrier_version_info = carrier_version_info.set_index('MCC-MNC')
