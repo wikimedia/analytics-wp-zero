@@ -210,6 +210,16 @@ class Carrier(object):
         "network": "Tcell",
         "slug": "tcell-tajikistan"
     })
+    carrier_info.insert(0,{
+        "country": "Bangladesh",
+        "iso": "BD",
+        "mcc": "470",
+        "mcc_mnc": "470-01",
+        "mnc": "01",
+        "name": "Grameenphone Bangladesh",
+        "network": "Grameenphone",
+        "slug": "grameenphone-bangladesh"
+    })
 
     carrier_version_info = wikipandas.get_table(
             site='wikimediafoundation.org',
@@ -389,6 +399,7 @@ def clean_carrier_counts(carrier_counts):
             'zain/celtel-ltd-kenya' : 'airtel-kenya',
             'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',
             'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',
+            'grameenphone-bangladesh' : 'grameenphone-bangladesh',
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
