@@ -54,10 +54,10 @@ DATE_FMT = '%Y-%m-%d'
 CONNECT_GAPS = True # If true, dates around bad_dates get connected by a line in the graph
 
 VERSIONS = {'X' : 'X', 'M' : 'M', 'M+Z' : 'M+Z', 'Z' : 'Z', 'Country' : 'Country'}
-VERSIONS_LONG = {'X' : 'Free page views from carrier to desktop (non-mobile) Wikipedia urls',
-                'M' : 'Free page views from carrier to m.wikipedia.org urls',
-                'Z' : 'Free page views from carrier to zero.wikipedia.org urls',
-                'M+Z' : 'Combined free page views from carrier to m.wikipedia.org and zero.wikipedia.org urls',
+VERSIONS_LONG = {'X' : 'Page views from carrier to desktop (non-mobile) Wikipedia urls',
+                'M' : 'Page views from carrier to m.wikipedia.org urls',
+                'Z' : 'Page views from carrier to zero.wikipedia.org urls',
+                'M+Z' : 'Combined page views from carrier to m.wikipedia.org and zero.wikipedia.org urls',
                 'Country' : 'Total page views within country (all networks, not just carrier) to m.wikipedia.org and zero.wikipedia.org urls'}
 
 FIELDS = ['date', 'lang', 'project', 'site', 'country', 'carrier']
@@ -260,7 +260,6 @@ class Carrier(object):
         # 'Which version is Free?' looks like `m.wikipedia & zero.wikipedia`
         self.versions = re.findall('(m|zero)\.wikipedia',version_record['Which version is free?'])
         self.versions = [s[0].upper() for s in self.versions]
-        self.start_date = dateutil.parser.parse(version_record['Free as of'])
         logger.debug('constructed carrier:\n%s', pprint.pformat(vars(self)))
 
 
@@ -508,15 +507,6 @@ def make_version_sources(counts, carrier, basedir, prefix):
     # logger.debug('counts.columns: %s', counts.columns)
     logger.debug('filtering counts for carrier name: `%s`', carrier.slug)
     prov_counts = counts[counts.carrier == carrier.slug]
-    start_date = carrier.start_date
-    if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
-        # this means that the carrier isn't yet live
-        if len(prov_counts['date']):
-            logger.debug('prov_counts.date.min(): %s', prov_counts.date.min())
-            start_date = prov_counts.date.min()
-        else:
-            logger.warning('carrier counts for carrier %s is empty', carrier.slug)
-    prov_counts = prov_counts[prov_counts['date'] >= start_date]
     
     if len(prov_counts) == 0:
         logger.warning('skipping carrier: %s--graphs will not be available on dashbaord', carrier.name)
@@ -614,7 +604,7 @@ def make_percent_sources(carrier,
 def make_summary_percent_graph(datasources, basedir, prefix):
     """no launch date checking because this is for internal use only"""
     logger.debug('making percent summary!')
-    limn_name = 'Free Mobile Page Requests as Percent of Country'
+    limn_name = 'Mobile Page Requests as Percent of Country'
     g = limnpy.Graph(slugify(prefix + limn_name), limn_name, []) 
     for prov, ds in datasources.items():
         g.add_metric(ds, 'Country Percentage Share', label=prov.name)
@@ -631,12 +621,7 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
 	if carrier.mcc_mnc == '502-13':
 		logger.info( "Dropping 'Celcom Malaysia' in total sum as requested by Amit Kapoor via email 2013-07-31" )
 		continue
-        start_date = carrier.start_date
-        #logger.debug('filtering carrier: %s by start date: %s', carrier.name, carrier.start_date)
-        if not start_date or (isinstance(start_date, float) and math.isnan(start_date)):
-            # this means that the carrier isn't yet live
-            continue
-        valid_df = datasource.data[datasource.data.index >= start_date]
+        valid_df = datasource.data
         #logger.debug('carrier.versions: %s', carrier.versions)
 
         free_versions = set(map(VERSIONS.get, carrier.versions))
@@ -658,10 +643,10 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
 
     if monthly_downsample:
         total_ds_limn_id = 'free_mobile_traffic_by_version'
-        total_ds_limn_name = 'Free Mobile Traffic by Version'
+        total_ds_limn_name = 'Mobile Traffic by Version'
     else:
         total_ds_limn_id = 'free_mobile_traffic_by_version_monthly_summed'
-        total_ds_limn_name = 'Summed Monthly Free Mobile Traffic by Version'
+        total_ds_limn_name = 'Summed Monthly Mobile Traffic by Version'
     total_ds = limnpy.DataSource(limn_id=prefix + total_ds_limn_id,
                                  limn_name=total_ds_limn_name,
                                  data=final,
@@ -675,11 +660,10 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
     wikipedia free of data charges.  Operators provide free access to either
     the <a href="http://en.m.wikipedia.org">full mobile site</a> or the <a
     href="http://en.zero.wikipedia.org">mobile site without images</a>.  
-    This graph shows the total number of free page requests coming from all
+    This graph shows the total number of page requests coming from all
     of our mobile carriers for each of those versions.  We only consider the
-    requests for the versions to which each operator provides free access, 
-    and we only begin counting requests after the public start date for each
-    operator."""
+    requests for the versions to which each operator provides free access. 
+    """
 
     #total_graph.graph['desc'] += make_extended_legend(['M+Z', 'M', 'Z'])
     total_graph.write(basedir)
@@ -687,7 +671,7 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
     if monthly_downsample:
         final_monthly = downsample_monthly(final_full)
         total_ds_monthly = limnpy.DataSource(limn_id=prefix + 'free_mobile_traffic_by_version_monthly',
-                                             limn_name='Monthly Free Mobile Traffic by Version',
+                                             limn_name='Monthly Mobile Traffic by Version',
                                              data=final_monthly,
                                              limn_group=LIMN_GROUP)
         total_ds_monthly.write(basedir)
@@ -698,7 +682,7 @@ def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=
 
 def make_version_graph(carrier, version_source, basedir, daily=False):
     version_graph = version_source.get_graph([VERSIONS['M'], VERSIONS['Z']])
-    version_graph.graph['desc'] = "This graph shows the number of free page "\
+    version_graph.graph['desc'] = "This graph shows the number of page "\
             "requests coming from the %s network to each of the different "\
             "Wikipedia mobile sites." % carrier.name
     if not daily:
