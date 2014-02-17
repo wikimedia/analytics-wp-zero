@@ -131,66 +131,34 @@ class Carrier(object):
 
     carrier_info = mccmnc.mccmnc(usecache=True)
     carrier_info.insert(0,{
-        "network": "Tata", 
-        "country": "India", 
-        "mcc": "405", 
-        "iso": "AF", 
-        "country_code": "IN", 
-        "mcc_mnc": "405-*", 
-        "mnc": "*",
-        "name" : "Tata India",
-        "slug": "tata-india"
+        "country": "Russia",
+        "iso": "RU",
+        "mcc": "250",
+        "mcc_mnc": "250-99",
+        "mnc": "99",
+        "name": "Beeline Russia",
+        "network": "Beeline",
+        "slug": "bee-line-gsm-russian-federation"
     })
     carrier_info.insert(0,{
-        "country": "Indonesia",
-        "country_code": "62",
-        "iso": "ID",
-        "mcc": "510",
-        "mcc_mnc": "510-11",
-        "mnc": "11",
-        "name": "XL Axiata  Indonesia",
-        "network": "XL Axiata",
-        "slug": "xl-axiata-indonesia"
+        "country": "Kosovo",
+        "iso": "KX",
+        "mcc": "293",
+        "mcc_mnc": "293-41",
+        "mnc": "41",
+        "name": "IPKO Kosovo",
+        "network": "IPKO",
+        "slug": "ipko-kosovo"
     })
     carrier_info.insert(0,{
-        "country": "Madagascar",
-        "iso": "MG",
-        "mcc": "646",
-        "mcc_mnc": "646-02",
-        "mnc": "02",
-        "name": "Orange Madagascar",
-        "network": "Orange",
-        "slug": "orange-madagascar"
-    })
-    carrier_info.insert(0,{
-        "country": "Jordan",
-        "iso": "JO",
-        "mcc": "416",
-        "mcc_mnc": "416-03",
-        "mnc": "03",
-        "name": "Umniah Jordan",
-        "network": "Umniah",
-        "slug": "umniah-jordan"
-    })
-    carrier_info.insert(0,{
-        "country": "Bangladesh",
-        "iso": "BD",
-        "mcc": "470",
-        "mcc_mnc": "470-03",
-        "mnc": "03",
-        "name": "Banglalink Bangladesh",
-        "network": "Banglalink",
-        "slug": "banglalink-bangladesh"
-    })
-    carrier_info.insert(0,{
-        "country": "Kenya",
-        "iso": "KE",
-        "mcc": "639",
-        "mcc_mnc": "639-03",
-        "mnc": "03",
-        "name": "Airtel Kenya",
-        "network": "Airtel",
-        "slug": "airtel-kenya"
+        "country": "Montenegro",
+        "iso": "ME",
+        "mcc": "297",
+        "mcc_mnc": "297-01",
+        "mnc": "01",
+        "name": "Telenor Montenegro",
+        "network": "Telenor",
+        "slug": "promonte-gsm-montenegro"
     })
     carrier_info.insert(0,{
         "country": "Kazakhstan",
@@ -203,6 +171,76 @@ class Carrier(object):
         "slug": "beeline-kazakhstan"
     })
     carrier_info.insert(0,{
+        "country": "India",
+        "iso": "IN",
+        "mcc": "404",
+        "mcc_mnc": "404-01",
+        "mnc": "01",
+        "name": "Aircel India",
+        "network": "Aircel",
+        "slug": "aircel-digilink-india-india"
+    })
+    carrier_info.insert(0,{
+        "country": "Pakistan",
+        "iso": "PK",
+        "mcc": "410",
+        "mcc_mnc": "410-01",
+        "mnc": "01",
+        "name": "Mobilink Pakistan",
+        "network": "Mobilink",
+        "slug": "mobilink-pakistan"
+    })
+    carrier_info.insert(0,{
+        "country": "Sri Lanka",
+        "iso": "LK",
+        "mcc": "413",
+        "mcc_mnc": "413-02",
+        "mnc": "02",
+        "name": "Dialog Sri Lanka",
+        "network": "Dialog",
+        "slug": "mtn-dialog-sri-lanka"
+    })
+    carrier_info.insert(0,{
+        "country": "Jordan",
+        "iso": "JO",
+        "mcc": "416",
+        "mcc_mnc": "416-03",
+        "mnc": "03",
+        "name": "Umniah Jordan",
+        "network": "Umniah",
+        "slug": "umniah-jordan"
+    })
+    carrier_info.insert(0,{
+        "country": "Saudi arabia",
+        "iso": "SA",
+        "mcc": "420",
+        "mcc_mnc": "420-01",
+        "mnc": "01",
+        "name": "Saudi Telecom Saudi arabia",
+        "network": "Saudi Telecom",
+        "slug": "stc-al-jawal-saudi-arabia"
+    })
+    carrier_info.insert(0,{
+        "country": "Bahrain",
+        "iso": "BH",
+        "mcc": "426",
+        "mcc_mnc": "426-04",
+        "mnc": "04",
+        "name": "VIVA Bahrain",
+        "network": "VIVA",
+        "slug": "viva-bahrain"
+    })
+    carrier_info.insert(0,{
+        "country": "Mongolia",
+        "iso": "MN",
+        "mcc": "428",
+        "mcc_mnc": "428-98",
+        "mnc": "98",
+        "name": "G-Mobile Mongolia",
+        "network": "G-Mobile",
+        "slug": "g-mobile-mongolia"
+    })
+    carrier_info.insert(0,{
         "country": "Tajikistan",
         "iso": "TJ",
         "mcc": "436",
@@ -213,6 +251,26 @@ class Carrier(object):
         "slug": "tcell-tajikistan"
     })
     carrier_info.insert(0,{
+        "country": "Tajikistan",
+        "iso": "TJ",
+        "mcc": "436",
+        "mcc_mnc": "436-04",
+        "mnc": "04",
+        "name": "Babilon-Mobile Tajikistan",
+        "network": "Babilon-Mobile",
+        "slug": "babilon-mobile-tajikistan"
+    })
+    carrier_info.insert(0,{
+        "country": "Cambodia",
+        "iso": "KH",
+        "mcc": "456",
+        "mcc_mnc": "456-02",
+        "mnc": "02",
+        "name": "Smart Cambodia",
+        "network": "Smart",
+        "slug": "smart-cambodia"
+    })
+    carrier_info.insert(0,{
         "country": "Bangladesh",
         "iso": "BD",
         "mcc": "470",
@@ -221,6 +279,216 @@ class Carrier(object):
         "name": "Grameenphone Bangladesh",
         "network": "Grameenphone",
         "slug": "grameenphone-bangladesh"
+    })
+    carrier_info.insert(0,{
+        "country": "Bangladesh",
+        "iso": "BD",
+        "mcc": "470",
+        "mcc_mnc": "470-03",
+        "mnc": "03",
+        "name": "Banglalink Bangladesh",
+        "network": "Banglalink",
+        "slug": "banglalink-bangladesh"
+    })
+    carrier_info.insert(0,{
+        "country": "Bangladesh",
+        "iso": "BD",
+        "mcc": "470",
+        "mcc_mnc": "470-07",
+        "mnc": "07",
+        "name": "Airtel Bangladesh",
+        "network": "Airtel",
+        "slug": "airtel-bangladesh"
+    })
+    carrier_info.insert(0,{
+        "country": "Malaysia",
+        "iso": "MY",
+        "mcc": "502",
+        "mcc_mnc": "502-13",
+        "mnc": "13",
+        "name": "Celcom Malaysia",
+        "network": "Celcom",
+        "slug": "celcom-malaysia"
+    })
+    carrier_info.insert(0,{
+        "country": "Malaysia",
+        "iso": "MY",
+        "mcc": "502",
+        "mcc_mnc": "502-16",
+        "mnc": "16",
+        "name": "Digi Malaysia",
+        "network": "Digi",
+        "slug": "digi-telecommunications-malaysia"
+    })
+    carrier_info.insert(0,{
+        "country": "Indonesia",
+        "iso": "ID",
+        "mcc": "510",
+        "mcc_mnc": "510-11",
+        "mnc": "11",
+        "name": "XL Axiata Indonesia",
+        "network": "XL Axiata",
+        "slug": "xl-axiata-indonesia"
+    })
+    carrier_info.insert(0,{
+        "country": "Thailand",
+        "iso": "TH",
+        "mcc": "520",
+        "mcc_mnc": "520-18",
+        "mnc": "18",
+        "name": "DTAC Thailand",
+        "network": "DTAC",
+        "slug": "total-access-dtac-thailand"
+    })
+    carrier_info.insert(0,{
+        "country": "Morocco",
+        "iso": "MA",
+        "mcc": "604",
+        "mcc_mnc": "604-00",
+        "mnc": "00",
+        "name": "Orange Morocco",
+        "network": "Orange",
+        "slug": "orange-morocco"
+    })
+    carrier_info.insert(0,{
+        "country": "Tunisia",
+        "iso": "TN",
+        "mcc": "605",
+        "mcc_mnc": "605-01",
+        "mnc": "01",
+        "name": "Orange Tunisia",
+        "network": "Orange",
+        "slug": "orange-tunisia"
+    })
+    carrier_info.insert(0,{
+        "country": "Ivory Coast",
+        "iso": "CI",
+        "mcc": "612",
+        "mcc_mnc": "612-03",
+        "mnc": "03",
+        "name": "Orange Ivory Coast",
+        "network": "Orange",
+        "slug": "orange-ivory-coast"
+    })
+    carrier_info.insert(0,{
+        "country": "Niger",
+        "iso": "NE",
+        "mcc": "614",
+        "mcc_mnc": "614-04",
+        "mnc": "04",
+        "name": "Orange Niger",
+        "network": "Orange",
+        "slug": "orange-sahelc-niger"
+    })
+    carrier_info.insert(0,{
+        "country": "Nigeria",
+        "iso": "NG",
+        "mcc": "621",
+        "mcc_mnc": "621-20",
+        "mnc": "20",
+        "name": "Airtel Nigeria",
+        "network": "Airtel",
+        "slug": "airtel-nigeria"
+    })
+    carrier_info.insert(0,{
+        "country": "Central African Republic",
+        "iso": "CF",
+        "mcc": "623",
+        "mcc_mnc": "623-03",
+        "mnc": "03",
+        "name": "Orange Central African Republic",
+        "network": "Orange",
+        "slug": "orange-central-african-republic"
+    })
+    carrier_info.insert(0,{
+        "country": "Cameroon",
+        "iso": "CM",
+        "mcc": "624",
+        "mcc_mnc": "624-02",
+        "mnc": "02",
+        "name": "Orange Cameroon",
+        "network": "Orange",
+        "slug": "orange-cameroon"
+    })
+    carrier_info.insert(0,{
+        "country": "Democratic Republic of the Congo",
+        "iso": "CD",
+        "mcc": "630",
+        "mcc_mnc": "630-86",
+        "mnc": "86",
+        "name": "Orange Democratic Republic of the Congo",
+        "network": "Orange",
+        "slug": "cct-congo-dem-rep"
+    })
+    carrier_info.insert(0,{
+        "country": "Kenya",
+        "iso": "KE",
+        "mcc": "639",
+        "mcc_mnc": "639-02",
+        "mnc": "02",
+        "name": "Safaricom Kenya",
+        "network": "Safaricom",
+        "slug": "safaricom-kenya"
+    })
+    carrier_info.insert(0,{
+        "country": "Kenya",
+        "iso": "KE",
+        "mcc": "639",
+        "mcc_mnc": "639-03",
+        "mnc": "03",
+        "name": "Airtel Kenya",
+        "network": "Airtel",
+        "slug": "airtel-kenya"
+    })
+    carrier_info.insert(0,{
+        "country": "Kenya",
+        "iso": "KE",
+        "mcc": "639",
+        "mcc_mnc": "639-07",
+        "mnc": "07",
+        "name": "Orange Kenya",
+        "network": "Orange",
+        "slug": "orange-kenya"
+    })
+    carrier_info.insert(0,{
+        "country": "Uganda",
+        "iso": "UG",
+        "mcc": "641",
+        "mcc_mnc": "641-14",
+        "mnc": "14",
+        "name": "Orange Uganda",
+        "network": "Orange",
+        "slug": "orange-uganda"
+    })
+    carrier_info.insert(0,{
+        "country": "Madagascar",
+        "iso": "MG",
+        "mcc": "646",
+        "mcc_mnc": "646-02",
+        "mnc": "02",
+        "name": "Orange Madagascar",
+        "network": "Orange",
+        "slug": "orange-madagascar"
+    })
+    carrier_info.insert(0,{
+        "country": "Botswana",
+        "iso": "BW",
+        "mcc": "652",
+        "mcc_mnc": "652-02",
+        "mnc": "02",
+        "name": "Orange Botswana",
+        "network": "Orange",
+        "slug": "orange-botswana"
+    })
+    carrier_info.insert(0,{
+        "country": "South Africa",
+        "iso": "ZA",
+        "mcc": "655",
+        "mcc_mnc": "655-12",
+        "mnc": "12",
+        "name": "MTN South Africa",
+        "network": "MTN",
+        "slug": "mtn-south-africa"
     })
 
     carrier_version_info = wikipandas.get_table(
@@ -381,26 +649,42 @@ def clean_counts(counts):
 
 def clean_carrier_counts(carrier_counts):
     replace_dict = {
-            '405-0%2A' : 'tata-india',
-            '405-0*'  : 'tata-india',
-            'cct-congo,-dem-rep' : 'cct-congo-dem-rep',
-            'stc/al-jawal-saudi-arabia' : 'stc-al-jawal-saudi-arabia',
-            'total-access-(dtac)-thailand' : 'total-access-dtac-thailand',
-            'digi-malaysia' : 'digi-telecommunications-malaysia',
-            'orange-niger' : 'orange-sahelc-niger',
-            'orange-tunesia' : 'orange-tunisia',
-            'saudi-telecom' :  'stc-al-jawal-saudi-arabia',
-            'dtac-thailand' : 'total-access-dtac-thailand',
-            'pt-excelcom-indonesia' : 'xl-axiata-indonesia',
-            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',
-            'hello/malaysia-telcom-cambodia' : 'hello-malaysia-telcom-cambodia',
-            'soci-madagascar' : 'orange-madagascar',
-            'umniah-mobile-co-jordan' : 'umniah-jordan',
-            'orascom-bangladesh' : 'banglalink-bangladesh',
-            'zain/celtel-ltd-kenya' : 'airtel-kenya',
-            'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',
-            'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',
-            'grameenphone-bangladesh' : 'grameenphone-bangladesh',
+            'bee-line-gsm-russian-federation' : 'bee-line-gsm-russian-federation',  # 250-99
+            'mobitel-slovenia' : 'ipko-kosovo',  # 293-41
+            'promonte-gsm-montenegro' : 'promonte-gsm-montenegro',  # 297-01
+            'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',  # 401-01
+            'aircel-digilink-india-india' : 'aircel-digilink-india-india',  # 404-01
+            'mobilink-pakistan' : 'mobilink-pakistan',  # 410-01
+            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',  # 413-02
+            'umniah-mobile-co-jordan' : 'umniah-jordan',  # 416-03
+            'stc/al-jawal-saudi-arabia' : 'stc-al-jawal-saudi-arabia',  # 420-01
+            'viva-bahrain' : 'viva-bahrain',  # 426-04
+            '428-98' : 'g-mobile-mongolia',  # 428-98
+            'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',  # 436-01
+            'babilon-m-tajikistan' : 'babilon-mobile-tajikistan',  # 436-04
+            'hello/malaysia-telcom-cambodia' : 'smart-cambodia',  # 456-02
+            'grameenphone-bangladesh' : 'grameenphone-bangladesh',  # 470-01
+            'orascom-bangladesh' : 'banglalink-bangladesh',  # 470-03
+            'warid-telecom-bangladesh' : 'airtel-bangladesh',  # 470-07
+            'celcom-malaysia' : 'celcom-malaysia',  # 502-13
+            'digi-telecommunications-malaysia' : 'digi-telecommunications-malaysia',  # 502-16
+            'pt-excelcom-indonesia' : 'xl-axiata-indonesia',  # 510-11
+            'total-access-(dtac)-thailand' : 'total-access-dtac-thailand',  # 520-18
+            'medi-telecom-morocco' : 'orange-morocco',  # 604-00
+            'orange-tunisia' : 'orange-tunisia',  # 605-01
+            'orange-ivory-coast' : 'orange-ivory-coast',  # 612-03
+            'orange-sahelc-niger' : 'orange-sahelc-niger',  # 614-04
+            'zain/econet-nigeria' : 'airtel-nigeria',  # 621-20
+            'orange/celca-central-african-rep' : 'orange-central-african-republic',  # 623-03
+            'orange-cameroon' : 'orange-cameroon',  # 624-02
+            'cct-congo,-dem-rep' : 'cct-congo-dem-rep',  # 630-86
+            'safaricom-ltd-kenya' : 'safaricom-kenya',  # 639-02
+            'zain/celtel-ltd-kenya' : 'airtel-kenya',  # 639-03
+            'orange-kenya' : 'orange-kenya',  # 639-07
+            'orange-uganda' : 'orange-uganda',  # 641-14
+            'soci-madagascar' : 'orange-madagascar',  # 646-02
+            'orange-botswana' : 'orange-botswana',  # 652-02
+            '655-12' : 'mtn-south-africa',  # 655-12
             }
     carrier_counts.carrier = carrier_counts.carrier.replace(replace_dict)
     return carrier_counts
