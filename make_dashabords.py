@@ -36,9 +36,7 @@ from pandas.tseries.index import DatetimeIndex
 from pandas.lib import Timestamp
 
 #import gcat
-import wikipandas
 import limnpy
-import mccmnc
 
 
 LIMN_GROUP = 'gp_zero'
@@ -129,7 +127,7 @@ BAD_DATES = [
 
 class Carrier(object):
 
-    carrier_info = mccmnc.mccmnc(usecache=True)
+    carrier_info = []
     carrier_info.insert(0,{
         "country": "Russia",
         "iso": "RU",
@@ -138,7 +136,8 @@ class Carrier(object):
         "mnc": "99",
         "name": "Beeline Russia",
         "network": "Beeline",
-        "slug": "bee-line-gsm-russian-federation"
+        "slug": "bee-line-gsm-russian-federation",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Kosovo",
@@ -148,7 +147,8 @@ class Carrier(object):
         "mnc": "41",
         "name": "IPKO Kosovo",
         "network": "IPKO",
-        "slug": "ipko-kosovo"
+        "slug": "ipko-kosovo",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Montenegro",
@@ -158,7 +158,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Telenor Montenegro",
         "network": "Telenor",
-        "slug": "promonte-gsm-montenegro"
+        "slug": "promonte-gsm-montenegro",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Kazakhstan",
@@ -168,7 +169,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Beeline Kazakhstan",
         "network": "Beeline",
-        "slug": "beeline-kazakhstan"
+        "slug": "beeline-kazakhstan",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "India",
@@ -178,7 +180,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Aircel India",
         "network": "Aircel",
-        "slug": "aircel-digilink-india-india"
+        "slug": "aircel-digilink-india-india",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Pakistan",
@@ -188,7 +191,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Mobilink Pakistan",
         "network": "Mobilink",
-        "slug": "mobilink-pakistan"
+        "slug": "mobilink-pakistan",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Sri Lanka",
@@ -198,7 +202,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Dialog Sri Lanka",
         "network": "Dialog",
-        "slug": "mtn-dialog-sri-lanka"
+        "slug": "mtn-dialog-sri-lanka",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Jordan",
@@ -208,7 +213,8 @@ class Carrier(object):
         "mnc": "03",
         "name": "Umniah Jordan",
         "network": "Umniah",
-        "slug": "umniah-jordan"
+        "slug": "umniah-jordan",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Saudi arabia",
@@ -218,7 +224,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Saudi Telecom Saudi arabia",
         "network": "Saudi Telecom",
-        "slug": "stc-al-jawal-saudi-arabia"
+        "slug": "stc-al-jawal-saudi-arabia",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Bahrain",
@@ -228,7 +235,8 @@ class Carrier(object):
         "mnc": "04",
         "name": "VIVA Bahrain",
         "network": "VIVA",
-        "slug": "viva-bahrain"
+        "slug": "viva-bahrain",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Mongolia",
@@ -238,7 +246,8 @@ class Carrier(object):
         "mnc": "98",
         "name": "G-Mobile Mongolia",
         "network": "G-Mobile",
-        "slug": "g-mobile-mongolia"
+        "slug": "g-mobile-mongolia",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Tajikistan",
@@ -248,7 +257,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Tcell Tajikistan",
         "network": "Tcell",
-        "slug": "tcell-tajikistan"
+        "slug": "tcell-tajikistan",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Tajikistan",
@@ -258,7 +268,8 @@ class Carrier(object):
         "mnc": "04",
         "name": "Babilon-Mobile Tajikistan",
         "network": "Babilon-Mobile",
-        "slug": "babilon-mobile-tajikistan"
+        "slug": "babilon-mobile-tajikistan",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Cambodia",
@@ -268,7 +279,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Smart Cambodia",
         "network": "Smart",
-        "slug": "smart-cambodia"
+        "slug": "smart-cambodia",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Bangladesh",
@@ -278,7 +290,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Grameenphone Bangladesh",
         "network": "Grameenphone",
-        "slug": "grameenphone-bangladesh"
+        "slug": "grameenphone-bangladesh",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Bangladesh",
@@ -288,7 +301,8 @@ class Carrier(object):
         "mnc": "03",
         "name": "Banglalink Bangladesh",
         "network": "Banglalink",
-        "slug": "banglalink-bangladesh"
+        "slug": "banglalink-bangladesh",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Bangladesh",
@@ -298,7 +312,8 @@ class Carrier(object):
         "mnc": "07",
         "name": "Airtel Bangladesh",
         "network": "Airtel",
-        "slug": "airtel-bangladesh"
+        "slug": "airtel-bangladesh",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Malaysia",
@@ -308,7 +323,8 @@ class Carrier(object):
         "mnc": "13",
         "name": "Celcom Malaysia",
         "network": "Celcom",
-        "slug": "celcom-malaysia"
+        "slug": "celcom-malaysia",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Malaysia",
@@ -318,7 +334,8 @@ class Carrier(object):
         "mnc": "16",
         "name": "Digi Malaysia",
         "network": "Digi",
-        "slug": "digi-telecommunications-malaysia"
+        "slug": "digi-telecommunications-malaysia",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Indonesia",
@@ -328,7 +345,8 @@ class Carrier(object):
         "mnc": "11",
         "name": "XL Axiata Indonesia",
         "network": "XL Axiata",
-        "slug": "xl-axiata-indonesia"
+        "slug": "xl-axiata-indonesia",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Thailand",
@@ -338,7 +356,8 @@ class Carrier(object):
         "mnc": "18",
         "name": "DTAC Thailand",
         "network": "DTAC",
-        "slug": "total-access-dtac-thailand"
+        "slug": "total-access-dtac-thailand",
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Morocco",
@@ -348,7 +367,8 @@ class Carrier(object):
         "mnc": "00",
         "name": "Orange Morocco",
         "network": "Orange",
-        "slug": "orange-morocco"
+        "slug": "orange-morocco",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Tunisia",
@@ -358,7 +378,8 @@ class Carrier(object):
         "mnc": "01",
         "name": "Orange Tunisia",
         "network": "Orange",
-        "slug": "orange-tunisia"
+        "slug": "orange-tunisia",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Ivory Coast",
@@ -368,7 +389,8 @@ class Carrier(object):
         "mnc": "03",
         "name": "Orange Ivory Coast",
         "network": "Orange",
-        "slug": "orange-ivory-coast"
+        "slug": "orange-ivory-coast",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Niger",
@@ -378,7 +400,8 @@ class Carrier(object):
         "mnc": "04",
         "name": "Orange Niger",
         "network": "Orange",
-        "slug": "orange-sahelc-niger"
+        "slug": "orange-sahelc-niger",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Nigeria",
@@ -388,7 +411,8 @@ class Carrier(object):
         "mnc": "20",
         "name": "Airtel Nigeria",
         "network": "Airtel",
-        "slug": "airtel-nigeria"
+        "slug": "airtel-nigeria",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Central African Republic",
@@ -398,7 +422,8 @@ class Carrier(object):
         "mnc": "03",
         "name": "Orange Central African Republic",
         "network": "Orange",
-        "slug": "orange-central-african-republic"
+        "slug": "orange-central-african-republic",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Cameroon",
@@ -408,7 +433,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Orange Cameroon",
         "network": "Orange",
-        "slug": "orange-cameroon"
+        "slug": "orange-cameroon",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Democratic Republic of the Congo",
@@ -418,7 +444,8 @@ class Carrier(object):
         "mnc": "86",
         "name": "Orange Democratic Republic of the Congo",
         "network": "Orange",
-        "slug": "cct-congo-dem-rep"
+        "slug": "cct-congo-dem-rep",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Kenya",
@@ -428,7 +455,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Safaricom Kenya",
         "network": "Safaricom",
-        "slug": "safaricom-kenya"
+        "slug": "safaricom-kenya",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Kenya",
@@ -438,7 +466,8 @@ class Carrier(object):
         "mnc": "03",
         "name": "Airtel Kenya",
         "network": "Airtel",
-        "slug": "airtel-kenya"
+        "slug": "airtel-kenya",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Kenya",
@@ -448,7 +477,8 @@ class Carrier(object):
         "mnc": "07",
         "name": "Orange Kenya",
         "network": "Orange",
-        "slug": "orange-kenya"
+        "slug": "orange-kenya",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Uganda",
@@ -458,7 +488,8 @@ class Carrier(object):
         "mnc": "14",
         "name": "Orange Uganda",
         "network": "Orange",
-        "slug": "orange-uganda"
+        "slug": "orange-uganda",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Madagascar",
@@ -468,7 +499,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Orange Madagascar",
         "network": "Orange",
-        "slug": "orange-madagascar"
+        "slug": "orange-madagascar",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "Botswana",
@@ -478,7 +510,8 @@ class Carrier(object):
         "mnc": "02",
         "name": "Orange Botswana",
         "network": "Orange",
-        "slug": "orange-botswana"
+        "slug": "orange-botswana",
+        "versions": ["M"]
     })
     carrier_info.insert(0,{
         "country": "South Africa",
@@ -488,27 +521,13 @@ class Carrier(object):
         "mnc": "12",
         "name": "MTN South Africa",
         "network": "MTN",
-        "slug": "mtn-south-africa"
+        "slug": "mtn-south-africa",
+        "versions": ["M", "Z"]
     })
 
-    carrier_version_info = wikipandas.get_table(
-            site='wikimediafoundation.org',
-            title='Mobile_partnerships',
-            table_idx=0)
-
-    # As MCC-MNC might be links to the corresponding Zero page on meta,
-    # we strip that markup, so we have plain strings again.
-    carrier_version_info['MCC-MNC'] = carrier_version_info['MCC-MNC'].apply(
-        lambda str: re.compile(r"\[\[m:Zero:\d{3}-\d{2}\|(\d{3}-\d{2})\]\]")
-            .sub(r"\1", str) )
-
-    carrier_version_info = carrier_version_info.set_index('MCC-MNC')
-
-    logger.info(carrier_version_info)
-    
     @staticmethod
     def active_carrier_mcc_mncs():
-        return list(Carrier.carrier_version_info.index)
+        return map(lambda carrier: carrier["mcc_mnc"], Carrier.carrier_info)
 
     def __init__(self, mcc_mnc):
         filtered = filter(lambda r : r['mcc_mnc'] == mcc_mnc, self.carrier_info)
@@ -519,15 +538,6 @@ class Carrier(object):
             raise
         self.__dict__.update(record)
         
-        try:
-            version_record = self.carrier_version_info.loc[mcc_mnc].to_dict()
-        except:
-            logger.exception('failed to find carrier identified by mcc-mnc: %s in business logic doc: '\
-                   '(http://wikimediafoundation.org/wiki/Mobile_partnerships#Where_is_Wikipedia_free_to_access.3F)', mcc_mnc)
-            raise
-        # 'Which version is Free?' looks like `m.wikipedia & zero.wikipedia`
-        self.versions = re.findall('(m|zero)\.wikipedia',version_record['Which version is free?'])
-        self.versions = [s[0].upper() for s in self.versions]
         logger.debug('constructed carrier:\n%s', pprint.pformat(vars(self)))
 
 
@@ -899,12 +909,6 @@ def make_summary_percent_graph(datasources, basedir, prefix):
 def make_summary_version_graph(datasources, basedir, prefix, monthly_downsample=True):
     dfs = []
     for carrier, datasource in datasources.items():
-	if carrier.mcc_mnc == '470-01':
-		logger.info( "Dropping 'GrameenPhone Bangladesh' in total sum as requested by Amit Kapoor via email 2013-07-31" )
-		continue
-	if carrier.mcc_mnc == '502-13':
-		logger.info( "Dropping 'Celcom Malaysia' in total sum as requested by Amit Kapoor via email 2013-07-31" )
-		continue
         valid_df = datasource.data
         #logger.debug('carrier.versions: %s', carrier.versions)
 
