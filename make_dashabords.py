@@ -136,7 +136,7 @@ class Carrier(object):
         "mnc": "99",
         "name": "Beeline Russia",
         "network": "Beeline",
-        "slug": "bee-line-gsm-russian-federation",
+        "slug": "beeline-russia",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -158,7 +158,7 @@ class Carrier(object):
         "mnc": "01",
         "name": "Telenor Montenegro",
         "network": "Telenor",
-        "slug": "promonte-gsm-montenegro",
+        "slug": "telenor-montenegro",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -180,7 +180,7 @@ class Carrier(object):
         "mnc": "01",
         "name": "Aircel India",
         "network": "Aircel",
-        "slug": "aircel-digilink-india-india",
+        "slug": "aircel-india",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -202,7 +202,7 @@ class Carrier(object):
         "mnc": "02",
         "name": "Dialog Sri Lanka",
         "network": "Dialog",
-        "slug": "mtn-dialog-sri-lanka",
+        "slug": "dialog-sri-lanka",
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
@@ -224,7 +224,7 @@ class Carrier(object):
         "mnc": "01",
         "name": "Saudi Telecom Saudi arabia",
         "network": "Saudi Telecom",
-        "slug": "stc-al-jawal-saudi-arabia",
+        "slug": "saudi-telecom-saudi-arabia",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -334,7 +334,7 @@ class Carrier(object):
         "mnc": "16",
         "name": "Digi Malaysia",
         "network": "Digi",
-        "slug": "digi-telecommunications-malaysia",
+        "slug": "digi-malaysia",
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
@@ -356,7 +356,7 @@ class Carrier(object):
         "mnc": "18",
         "name": "DTAC Thailand",
         "network": "DTAC",
-        "slug": "total-access-dtac-thailand",
+        "slug": "dtac-thailand",
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
@@ -400,7 +400,7 @@ class Carrier(object):
         "mnc": "04",
         "name": "Orange Niger",
         "network": "Orange",
-        "slug": "orange-sahelc-niger",
+        "slug": "orange-niger",
         "versions": ["M"]
     })
     carrier_info.insert(0,{
@@ -444,7 +444,7 @@ class Carrier(object):
         "mnc": "86",
         "name": "Orange Democratic Republic of the Congo",
         "network": "Orange",
-        "slug": "cct-congo-dem-rep",
+        "slug": "orange-democratic-republic-of-the-congo",
         "versions": ["M"]
     })
     carrier_info.insert(0,{
@@ -659,15 +659,15 @@ def clean_counts(counts):
 
 def clean_carrier_counts(carrier_counts):
     replace_dict = {
-            'bee-line-gsm-russian-federation' : 'bee-line-gsm-russian-federation',  # 250-99
+            'bee-line-gsm-russian-federation' : 'beeline-russia',  # 250-99
             'mobitel-slovenia' : 'ipko-kosovo',  # 293-41
-            'promonte-gsm-montenegro' : 'promonte-gsm-montenegro',  # 297-01
+            'promonte-gsm-montenegro' : 'telenor-montenegro',  # 297-01
             'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',  # 401-01
-            'aircel-digilink-india-india' : 'aircel-digilink-india-india',  # 404-01
+            'aircel-digilink-india-india' : 'aircel-india',  # 404-01
             'mobilink-pakistan' : 'mobilink-pakistan',  # 410-01
-            'mtn/dialog-sri-lanka' : 'mtn-dialog-sri-lanka',  # 413-02
+            'mtn/dialog-sri-lanka' : 'dialog-sri-lanka',  # 413-02
             'umniah-mobile-co-jordan' : 'umniah-jordan',  # 416-03
-            'stc/al-jawal-saudi-arabia' : 'stc-al-jawal-saudi-arabia',  # 420-01
+            'stc/al-jawal-saudi-arabia' : 'saudi-telecom-saudi-arabia',  # 420-01
             'viva-bahrain' : 'viva-bahrain',  # 426-04
             '428-98' : 'g-mobile-mongolia',  # 428-98
             'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',  # 436-01
@@ -677,17 +677,17 @@ def clean_carrier_counts(carrier_counts):
             'orascom-bangladesh' : 'banglalink-bangladesh',  # 470-03
             'warid-telecom-bangladesh' : 'airtel-bangladesh',  # 470-07
             'celcom-malaysia' : 'celcom-malaysia',  # 502-13
-            'digi-telecommunications-malaysia' : 'digi-telecommunications-malaysia',  # 502-16
+            'digi-telecommunications-malaysia' : 'digi-malaysia',  # 502-16
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',  # 510-11
-            'total-access-(dtac)-thailand' : 'total-access-dtac-thailand',  # 520-18
+            'total-access-(dtac)-thailand' : 'dtac-thailand',  # 520-18
             'medi-telecom-morocco' : 'orange-morocco',  # 604-00
             'orange-tunisia' : 'orange-tunisia',  # 605-01
             'orange-ivory-coast' : 'orange-ivory-coast',  # 612-03
-            'orange-sahelc-niger' : 'orange-sahelc-niger',  # 614-04
+            'orange-sahelc-niger' : 'orange-niger',  # 614-04
             'zain/econet-nigeria' : 'airtel-nigeria',  # 621-20
             'orange/celca-central-african-rep' : 'orange-central-african-republic',  # 623-03
             'orange-cameroon' : 'orange-cameroon',  # 624-02
-            'cct-congo,-dem-rep' : 'cct-congo-dem-rep',  # 630-86
+            'cct-congo,-dem-rep' : 'orange-democratic-republic-of-the-congo',  # 630-86
             'safaricom-ltd-kenya' : 'safaricom-kenya',  # 639-02
             'zain/celtel-ltd-kenya' : 'airtel-kenya',  # 639-03
             'orange-kenya' : 'orange-kenya',  # 639-07
