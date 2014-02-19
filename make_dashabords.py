@@ -291,7 +291,7 @@ class Carrier(object):
         "name": "Grameenphone Bangladesh",
         "network": "Grameenphone",
         "slug": "grameenphone-bangladesh",
-        "versions": ["Z"]
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Bangladesh",
