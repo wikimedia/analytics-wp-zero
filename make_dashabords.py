@@ -113,8 +113,6 @@ BAD_DATES = [
                 datetime.date(2013,8,18),
                 datetime.date(2014,1,5),
                 datetime.date(2014,1,6),
-                datetime.date(2014,2,5),
-                datetime.date(2014,2,6),
             ]
 
 
