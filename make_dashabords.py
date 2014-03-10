@@ -347,6 +347,17 @@ class Carrier(object):
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
+        "country": "Philippines",
+        "iso": "PH",
+        "mcc": "515",
+        "mcc_mnc": "515-03",
+        "mnc": "03",
+        "name": "Smart Philippines",
+        "network": "Smart",
+        "slug": "smart-philippines",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Thailand",
         "iso": "TH",
         "mcc": "520",
@@ -677,6 +688,7 @@ def clean_carrier_counts(carrier_counts):
             'celcom-malaysia' : 'celcom-malaysia',  # 502-13
             'digi-telecommunications-malaysia' : 'digi-malaysia',  # 502-16
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',  # 510-11
+            'smart-philippines' : 'smart-philippines',  # 515-03
             'total-access-(dtac)-thailand' : 'dtac-thailand',  # 520-18
             'medi-telecom-morocco' : 'orange-morocco',  # 604-00
             'orange-tunisia' : 'orange-tunisia',  # 605-01
