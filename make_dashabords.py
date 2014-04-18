@@ -248,6 +248,17 @@ class Carrier(object):
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
+        "country": "Nepal",
+        "iso": "NP",
+        "mcc": "429",
+        "mcc_mnc": "429-02",
+        "mnc": "02",
+        "name": "NCell Nepal",
+        "network": "NCell",
+        "slug": "ncell-nepal",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Tajikistan",
         "iso": "TJ",
         "mcc": "436",
@@ -267,6 +278,17 @@ class Carrier(object):
         "name": "Babilon-Mobile Tajikistan",
         "network": "Babilon-Mobile",
         "slug": "babilon-mobile-tajikistan",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
+        "country": "Kyrgyzstan",
+        "iso": "KG",
+        "mcc": "437",
+        "mcc_mnc": "437-01",
+        "mnc": "01",
+        "name": "Beeline Kyrgyzstan",
+        "network": "Beeline",
+        "slug": "beeline-kyrgyzstan",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -347,6 +369,17 @@ class Carrier(object):
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
+        "country": "Timor-Leste",
+        "iso": "TL",
+        "mcc": "514",
+        "mcc_mnc": "514-02",
+        "mnc": "02",
+        "name": "Timor Telecom Timor-Leste",
+        "network": "Timor Telecom",
+        "slug": "timor-telecom-timor-leste",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Philippines",
         "iso": "PH",
         "mcc": "515",
@@ -424,6 +457,17 @@ class Carrier(object):
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
+        "country": "Nigeria",
+        "iso": "NG",
+        "mcc": "621",
+        "mcc_mnc": "621-30",
+        "mnc": "30",
+        "name": "MTN Nigeria",
+        "network": "MTN",
+        "slug": "mtn-nigeria",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Central African Republic",
         "iso": "CF",
         "mcc": "623",
@@ -455,6 +499,17 @@ class Carrier(object):
         "network": "Orange",
         "slug": "orange-democratic-republic-of-the-congo",
         "versions": ["M"]
+    })
+    carrier_info.insert(0,{
+        "country": "Rwanda",
+        "iso": "RW",
+        "mcc": "635",
+        "mcc_mnc": "635-10",
+        "mnc": "10",
+        "name": "MTN Rwanda",
+        "network": "MTN",
+        "slug": "mtn-rwanda",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Kenya",
@@ -679,8 +734,10 @@ def clean_carrier_counts(carrier_counts):
             'stc/al-jawal-saudi-arabia' : 'saudi-telecom-saudi-arabia',  # 420-01
             'viva-bahrain' : 'viva-bahrain',  # 426-04
             '428-98' : 'g-mobile-mongolia',  # 428-98
+            'ncell-nepal' : 'ncell-nepal',  # 429-02
             'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',  # 436-01
             'babilon-m-tajikistan' : 'babilon-mobile-tajikistan',  # 436-04
+            'beeline/bitel-kyrgyzstan' : 'beeline-kyrgyzstan',  # 437-01
             'hello/malaysia-telcom-cambodia' : 'smart-cambodia',  # 456-02
             'grameenphone-bangladesh' : 'grameenphone-bangladesh',  # 470-01
             'orascom-bangladesh' : 'banglalink-bangladesh',  # 470-03
@@ -688,6 +745,7 @@ def clean_carrier_counts(carrier_counts):
             'celcom-malaysia' : 'celcom-malaysia',  # 502-13
             'digi-telecommunications-malaysia' : 'digi-malaysia',  # 502-16
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',  # 510-11
+            'timor-telecom-timor-leste' : 'timor-telecom-timor-leste',  # 514-02
             'smart-philippines' : 'smart-philippines',  # 515-03
             'total-access-(dtac)-thailand' : 'dtac-thailand',  # 520-18
             'medi-telecom-morocco' : 'orange-morocco',  # 604-00
@@ -695,9 +753,11 @@ def clean_carrier_counts(carrier_counts):
             'orange-ivory-coast' : 'orange-ivory-coast',  # 612-03
             'orange-sahelc-niger' : 'orange-niger',  # 614-04
             'zain/econet-nigeria' : 'airtel-nigeria',  # 621-20
+            'mtn-nigeria' : 'mtn-nigeria',  # 621-30
             'orange/celca-central-african-rep' : 'orange-central-african-republic',  # 623-03
             'orange-cameroon' : 'orange-cameroon',  # 624-02
             'cct-congo,-dem-rep' : 'orange-democratic-republic-of-the-congo',  # 630-86
+            'mtn/rwandacell-rwanda' : 'mtn-rwanda',  # 635-10
             'safaricom-ltd-kenya' : 'safaricom-kenya',  # 639-02
             'zain/celtel-ltd-kenya' : 'airtel-kenya',  # 639-03
             'orange-kenya' : 'orange-kenya',  # 639-07
