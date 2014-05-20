@@ -1,3 +1,4 @@
+/.tox
 deploy_key*
 *.pyc
 *.tsv
