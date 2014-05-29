@@ -160,6 +160,17 @@ class Carrier(object):
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
+        "country": "United States of America",
+        "iso": "US",
+        "mcc": "310",
+        "mcc_mnc": "310-260",
+        "mnc": "260",
+        "name": "T-Mobile United States of America",
+        "network": "T-Mobile",
+        "slug": "t-mobile-united-states-of-america",
+        "versions": ["Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Kazakhstan",
         "iso": "KZ",
         "mcc": "401",
@@ -726,6 +737,7 @@ def clean_carrier_counts(carrier_counts):
             'bee-line-gsm-russian-federation' : 'beeline-russia',  # 250-99
             'mobitel-slovenia' : 'ipko-kosovo',  # 293-41
             'promonte-gsm-montenegro' : 'telenor-montenegro',  # 297-01
+            't-mobile-united-states' : 't-mobile-united-states-of-america',  # 310-260
             'beeline/kar-tel-llp-kazakhstan' : 'beeline-kazakhstan',  # 401-01
             'aircel-digilink-india-india' : 'aircel-india',  # 404-01
             'mobilink-pakistan' : 'mobilink-pakistan',  # 410-01
