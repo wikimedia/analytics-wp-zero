@@ -217,6 +217,17 @@ class Carrier(object):
         "versions": ["Z"]
     })
     carrier_info.insert(0,{
+        "country": "Myanmar",
+        "iso": "MM",
+        "mcc": "414",
+        "mcc_mnc": "414-06",
+        "mnc": "06",
+        "name": "Telenor Myanmar",
+        "network": "Telenor",
+        "slug": "telenor-myanmar",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Jordan",
         "iso": "JO",
         "mcc": "416",
@@ -294,6 +305,17 @@ class Carrier(object):
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
+        "country": "Tajikistan",
+        "iso": "TJ",
+        "mcc": "436",
+        "mcc_mnc": "436-05",
+        "mnc": "05",
+        "name": "Beeline Tajikistan",
+        "network": "Beeline",
+        "slug": "beeline-tajikistan",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
         "country": "Kyrgyzstan",
         "iso": "KG",
         "mcc": "437",
@@ -324,7 +346,7 @@ class Carrier(object):
         "name": "Grameenphone Bangladesh",
         "network": "Grameenphone",
         "slug": "grameenphone-bangladesh",
-        "versions": ["M", "Z"]
+        "versions": ["Z"]
     })
     carrier_info.insert(0,{
         "country": "Bangladesh",
@@ -401,6 +423,17 @@ class Carrier(object):
         "name": "Smart Philippines",
         "network": "Smart",
         "slug": "smart-philippines",
+        "versions": ["M", "Z"]
+    })
+    carrier_info.insert(0,{
+        "country": "Philippines",
+        "iso": "PH",
+        "mcc": "515",
+        "mcc_mnc": "515-05",
+        "mnc": "05",
+        "name": "Sun Philippines",
+        "network": "Sun",
+        "slug": "sun-philippines",
         "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
@@ -501,6 +534,17 @@ class Carrier(object):
         "network": "Orange",
         "slug": "orange-cameroon",
         "versions": ["M"]
+    })
+    carrier_info.insert(0,{
+        "country": "Ghana",
+        "iso": "GH",
+        "mcc": "630",
+        "mcc_mnc": "630-03",
+        "mnc": "03",
+        "name": "Tigo Ghana",
+        "network": "Tigo",
+        "slug": "tigo-ghana",
+        "versions": ["M", "Z"]
     })
     carrier_info.insert(0,{
         "country": "Democratic Republic of the Congo",
@@ -744,6 +788,7 @@ def clean_carrier_counts(carrier_counts):
             'aircel-digilink-india-india' : 'aircel-india',  # 404-01
             'mobilink-pakistan' : 'mobilink-pakistan',  # 410-01
             'mtn/dialog-sri-lanka' : 'dialog-sri-lanka',  # 413-02
+            '414-06' : 'telenor-myanmar',  # 414-06
             'umniah-mobile-co-jordan' : 'umniah-jordan',  # 416-03
             'stc/al-jawal-saudi-arabia' : 'saudi-telecom-saudi-arabia',  # 420-01
             'viva-bahrain' : 'viva-bahrain',  # 426-04
@@ -751,6 +796,7 @@ def clean_carrier_counts(carrier_counts):
             'ncell-nepal' : 'ncell-nepal',  # 429-02
             'tcell/jc-somoncom-tajikistan' : 'tcell-tajikistan',  # 436-01
             'babilon-m-tajikistan' : 'babilon-mobile-tajikistan',  # 436-04
+            'bee-line-tajikistan' : 'beeline-tajikistan',  # 436-05
             'beeline/bitel-kyrgyzstan' : 'beeline-kyrgyzstan',  # 437-01
             'hello/malaysia-telcom-cambodia' : 'smart-cambodia',  # 456-02
             'grameenphone-bangladesh' : 'grameenphone-bangladesh',  # 470-01
@@ -761,6 +807,7 @@ def clean_carrier_counts(carrier_counts):
             'pt-excelcom-indonesia' : 'xl-axiata-indonesia',  # 510-11
             'timor-telecom-timor-leste' : 'timor-telecom-timor-leste',  # 514-02
             'smart-philippines' : 'smart-philippines',  # 515-03
+            'sun/digitel-philippines' : 'sun-philippines',  # 515-05
             'total-access-(dtac)-thailand' : 'dtac-thailand',  # 520-18
             'medi-telecom-morocco' : 'orange-morocco',  # 604-00
             'orange-tunisia' : 'orange-tunisia',  # 605-01
@@ -770,6 +817,7 @@ def clean_carrier_counts(carrier_counts):
             'mtn-nigeria' : 'mtn-nigeria',  # 621-30
             'orange/celca-central-african-rep' : 'orange-central-african-republic',  # 623-03
             'orange-cameroon' : 'orange-cameroon',  # 624-02
+            '630-03' : 'tigo-ghana',  # 630-03
             'cct-congo,-dem-rep' : 'orange-democratic-republic-of-the-congo',  # 630-86
             'mtn/rwandacell-rwanda' : 'mtn-rwanda',  # 635-10
             'safaricom-ltd-kenya' : 'safaricom-kenya',  # 639-02
