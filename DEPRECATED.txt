@@ -1,0 +1,4 @@
+SINCE 2015-03-20, THIS REPOSITORY IS DEPRECATED AND NO LONGER IN USE.
+
+Wikipedia Zero graphs are shown on wiki, and the data for the graphs is
+computed through Hive. Yuri would know further details.
